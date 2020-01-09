@@ -7,12 +7,16 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Models="using:RedditUWPClient.Models"
     xmlns:ViewModels="using:RedditUWPClient.ViewModels"
+    xmlns:Converters="using:RedditUWPClient.Converters"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     
     <Page.DataContext>
         <ViewModels:VM_MainPage/>
     </Page.DataContext>
+    <Page.Resources>
+        <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></Converters:BooleanToVisibilityConverter>
+    </Page.Resources>
     
     <Grid Background="#DAE0E6">
         <Grid.RowDefinitions>
@@ -35,7 +39,8 @@
      
         
         <ListView x:Name="ListView_MainThread" Grid.Row="2" Grid.Column="1"
-                     ItemsSource="{Binding Reddit_Entries}">
+                     ItemsSource="{Binding Reddit_Entries}"
+                     SelectedItem="{Binding SelectedEntry, Mode=TwoWay}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -98,6 +103,47 @@
 
         </Grid>
 
-        
+        <Grid x:Name="Flyout_OpaqueBackground" Background="Black" Opacity="0.6"
+              Grid.ColumnSpan="3" Grid.RowSpan="4"
+              Visibility="{Binding ShowFlyOutImage, Converter={StaticResource BooleanToVisibilityConverter}}">
+            </Grid>
+
+        <Grid x:Name="Flyout_Image" 
+              Grid.ColumnSpan="3" Grid.RowSpan="4"
+              Visibility="{Binding ShowFlyOutImage, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="10*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="10*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                <Button Grid.RowSpan="3" Grid.ColumnSpan="3" 
+                        Background="Transparent" BorderThickness="0" 
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        Command="{Binding Click_CloseFlyOut}" >
+                </Button>
+
+                <Frame Grid.Row="1" Grid.Column="1" Background="White" CornerRadius="10" Opacity="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                        <RowDefinition Height="1.2*"></RowDefinition>
+                                        <RowDefinition Height="10*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                            <Image Grid.RowSpan="2" Source="{Binding SelectedEntry.data.url}"></Image>
+                        <Button Margin="10" BorderThickness="0" Background="Transparent"
+                                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                                    Command="{Binding Click_CloseFlyOut}">
+                            <Image Source="/Images/CloseLogo.png"  ></Image>
+                        </Button>
+                    </Grid>
+                </Frame>
+                </Grid>
+            </Grid>
     </Grid>
 </Page>

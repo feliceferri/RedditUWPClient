@@ -1,5 +1,6 @@
 ﻿using RedditUWPClient.Helpers;
 using RedditUWPClient.Models;
+using RedditUWPClient.ViewModels.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,6 +17,7 @@ namespace RedditUWPClient.ViewModels
 
         public VM_MainPage()
         {
+           Click_CloseFlyOut = new NoParamCommand(CloseFlyOut);
            LoadEntriesAsync(); //FF: Cant and doesnt need to be awaited as the UI will be notified when the IObservableCollection is filled
         }
 
@@ -37,6 +39,23 @@ namespace RedditUWPClient.ViewModels
             }
         }
 
+        Child _SelectedEntry = null;
+        public Child SelectedEntry
+        {
+            get { return _SelectedEntry; }
+            set
+            {
+                _SelectedEntry = value;
+                NotifyPropertyChanged();
+
+                if (_SelectedEntry != null)
+                {
+                    //Show Flyout
+                    ShowFlyOutImage = true;
+                }
+            }
+        }
+
         bool _Processing = false;
         public bool Processing
         {
@@ -47,7 +66,25 @@ namespace RedditUWPClient.ViewModels
                 NotifyPropertyChanged();
             }
         }
-#endregion
+
+        bool _ShowFlyOutImage = false;
+        public bool ShowFlyOutImage
+        {
+            get { return _ShowFlyOutImage; }
+            set
+            {
+                _ShowFlyOutImage = value;
+                NotifyPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region Commands
+        
+        public NoParamCommand Click_CloseFlyOut { get; set; }
+      
+        
+        #endregion
 
         private async Task LoadEntriesAsync()
         {
@@ -77,7 +114,11 @@ namespace RedditUWPClient.ViewModels
             }
         }
 
-
+        internal void CloseFlyOut()
+        {
+            ShowFlyOutImage = false;
+            SelectedEntry = null; //FF: So the user can select it again, to see the image for 2nd time
+        }
 
         
     }
