@@ -39,24 +39,36 @@ namespace RedditUWPClient
 
             if (res.Success == true)
             {
-                
-                foreach (var item in res.value.data.children)
-                {
-                    Debug.WriteLine("title: " +item.data.title);
-                    Debug.WriteLine("Author: " + item.data.author); //subreddit vs subreddit_name_prefixed
-                    DateTime dt = new DateTime().UnixUTCTimeToLocalDateTime(item.data.created_utc);
-                    Debug.WriteLine("Entry date:" +   dt.ToString() + " Hours ago: " + Math.Floor((DateTime.Now - dt).TotalHours) );
-                    Debug.WriteLine("Comments: " + item.data.num_comments);
-                    Debug.WriteLine("");
-                }
+                this.ListView_MainThread.ItemsSource = res.value.data.children;
+
+                //foreach (var item in res.value.data.children)
+                //{
+                //    Debug.WriteLine("title: " + item.data.title);
+                //    Debug.WriteLine("Author: " + item.data.author); //subreddit vs subreddit_name_prefixed
+                //    DateTime dt = new DateTime().UnixUTCTimeToLocalDateTime(item.data.created_utc);
+                //    Debug.WriteLine("Entry date:" + dt.ToString() + " Hours ago: " + Math.Floor((DateTime.Now - dt).TotalHours));
+                //    Debug.WriteLine("Comments: " + item.data.num_comments);
+                //    Debug.WriteLine("");
+                //}
             }
             else
             {
                 throw res.Error;
             }
 
-           
-          
+
+            //var res = SamplingData.RedditEntries;
+            //foreach (var item in res)
+            //{
+            //    Debug.WriteLine("title: " + item.data.title);
+            //    Debug.WriteLine("Author: " + item.data.author); //subreddit vs subreddit_name_prefixed
+            //    DateTime dt = new DateTime().UnixUTCTimeToLocalDateTime(item.data.created_utc);
+            //    Debug.WriteLine("Entry date:" + dt.ToString() + " Hours ago: " + Math.Floor((DateTime.Now - dt).TotalHours));
+            //    Debug.WriteLine("Comments: " + item.data.num_comments);
+            //    Debug.WriteLine("");
+            //}
+
+            //this.ListView_MainThread.ItemsSource = res;
         }
     }
 }

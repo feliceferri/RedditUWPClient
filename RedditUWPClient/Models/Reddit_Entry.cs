@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using RedditUWPClient.ExtensionsMethods;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +20,7 @@ namespace RedditUWPClient.Models
     {
         public string modhash { get; set; }
         public int dist { get; set; }
-        public Child[] children { get; set; }
+        public List<Child> children { get; set; }
         public string after { get; set; }
         public object before { get; set; }
     }
@@ -135,6 +138,62 @@ namespace RedditUWPClient.Models
         public int num_crossposts { get; set; }
         public object media { get; set; }
         public bool is_video { get; set; }
+
+
+        [JsonIgnore]
+        public string TimeAgo
+        {
+            get
+            {
+                DateTime dt = new DateTime().UnixUTCTimeToLocalDateTime(this.created_utc);
+                TimeSpan diff = (DateTime.Now - dt);
+
+                if(diff.TotalHours  <1)
+                {
+                    return Math.Floor(diff.TotalMinutes) + " minutes ago";
+                }
+                else if(diff.TotalDays < 1)
+                {
+                    return Math.Floor(diff.TotalHours) + " hours ago";
+                }
+                else 
+                {
+                    return Math.Floor(diff.TotalDays) + " days ago";
+                }
+
+                
+            }
+        }
+
+        [JsonIgnore]
+        public string Comments
+        {
+            get
+            {
+                if (num_comments == 0)
+                {
+                    return "No comments";
+                }
+                else if (num_comments == 1)
+                {
+                    return "One comment";
+                }
+                else if (num_comments > 1000)
+                {
+                    return Math.Round((decimal)num_comments / 1000,1) + "k comments";
+                }
+                else if (num_comments > 1000000)
+                {
+                    return Math.Round((decimal)num_comments / 1000000,1) + "M comments";
+                }
+                else
+                {
+                    return num_comments + " comments";
+                }
+
+
+            }
+        }
     }
 
     public class Media_Embed
@@ -154,7 +213,7 @@ namespace RedditUWPClient.Models
 
     public class Preview
     {
-        public Image[] images { get; set; }
+        public List<Image> images { get; set; }
         public bool enabled { get; set; }
     }
 
@@ -213,6 +272,31 @@ namespace RedditUWPClient.Models
         public string url { get; set; }
         public int width { get; set; }
         public int height { get; set; }
+    }
+
+    
+
+    
+}
+
+
+public class SamplingData
+{
+
+    public static ObservableCollection<RedditUWPClient.Models.Child> RedditEntries
+    {
+        get
+        {
+            return new ObservableCollection<RedditUWPClient.Models.Child>()
+                {
+                    new RedditUWPClient.Models.Child { data = new RedditUWPClient.Models.Data1 { title = "Title1", author = "Author1", created_utc = 1578528573, num_comments = 1 } },
+                    new RedditUWPClient.Models.Child { data = new RedditUWPClient.Models.Data1 { title = "Title2", author = "Author2", created_utc = 1578528573, num_comments = 2 } },
+                    new RedditUWPClient.Models.Child { data = new RedditUWPClient.Models.Data1 { title = "Title3", author = "Author3", created_utc = 1578528573, num_comments = 3 } },
+                    new RedditUWPClient.Models.Child { data = new RedditUWPClient.Models.Data1 { title = "Title4", author = "Author4", created_utc = 1578528573, num_comments = 4 } },
+                    new RedditUWPClient.Models.Child { data = new RedditUWPClient.Models.Data1 { title = "Title5", author = "Author5", created_utc = 1578528573, num_comments = 5 } },
+                };
+        }
+
     }
 
 }
