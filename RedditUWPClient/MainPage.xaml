@@ -34,7 +34,7 @@
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                     <DataTemplate x:DataType="xModels:Child">
-                        <Grid Background="White" Height="200" Margin="0,10,0,0" CornerRadius="3">
+                        <Grid Background="White" Margin="0,10,0,0" CornerRadius="3">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="0.2*"></RowDefinition>
                                 <RowDefinition Height="*"></RowDefinition>
@@ -44,21 +44,31 @@
                                 <RowDefinition Height="0.1*"></RowDefinition>
                         </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*"></ColumnDefinition>
-                            <ColumnDefinition Width="0.2*"></ColumnDefinition>
-                            <ColumnDefinition Width="9*"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.7*"></ColumnDefinition>
+                                    <ColumnDefinition Width="0.25*"></ColumnDefinition>
+                                    <ColumnDefinition Width="9*"></ColumnDefinition>
+                                    <ColumnDefinition Width="0.25*"></ColumnDefinition>
+                                    <ColumnDefinition Width="0.7*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
 
                         <Frame Grid.RowSpan="4" Background="#F8F9FA"></Frame>
 
-                        <TextBlock Grid.Row="1" Grid.Column="2" Foreground="Gray" FontSize="10">
+                        <TextBlock Grid.Row="1" Grid.Column="2" Foreground="Gray" FontSize="10" Margin="0,10,0,0">
                             <Run Text="Posted by"></Run>
                             <Run Text="{Binding data.author}"></Run>
                             <Run Text="{Binding data.TimeAgo}"></Run>
                          </TextBlock>
-                        <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding data.title}" TextWrapping="WrapWholeWords"  
+                        <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding data.title}"
+                                   Margin="0,10,0,0"
+                                   TextWrapping="WrapWholeWords"  
                                    Foreground="Black"></TextBlock>
-                        <TextBlock Grid.Row="4" Grid.Column="2" Foreground="Gray" FontSize="12">
+                        
+                            <Image  Grid.Row="3" Grid.Column="2" Margin="0,15,0,5"
+                                Source="{Binding data.url}" >
+                            
+                        </Image>
+                        <TextBlock Grid.Row="4" Grid.Column="2" Foreground="Gray" 
+                                   Margin="0,10,0,5" FontSize="12">
                                 <Run Text="{Binding data.Comments}"></Run>
                                 <Run Text="Comments"></Run>
                         </TextBlock>
