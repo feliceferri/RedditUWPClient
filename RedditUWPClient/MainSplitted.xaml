@@ -1,0 +1,117 @@
+﻿<Page
+    x:Class="RedditUWPClient.MainSplitted"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RedditUWPClient"
+    xmlns:Models="using:RedditUWPClient.Models"
+    xmlns:ViewModels="using:RedditUWPClient.ViewModels"
+    xmlns:Converters="using:RedditUWPClient.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.DataContext>
+        <ViewModels:VM_MainPage/>
+    </Page.DataContext>
+    <Page.Resources>
+        <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></Converters:BooleanToVisibilityConverter>
+    </Page.Resources>
+    
+    <Grid>
+        <SplitView IsPaneOpen="True"
+           DisplayMode="Inline"
+           OpenPaneLength="400">
+            <SplitView.Pane>
+                <ListView x:Name="ListView_MainThread" 
+                          
+                          ItemsSource="{Binding Reddit_Entries}"
+                        SelectedItem="{Binding SelectedEntry, Mode=TwoWay}">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="Models:Child">
+                            <Border BorderBrush="Gray" BorderThickness="0,0,0,1" HorizontalAlignment="Stretch">
+                                <Grid Margin="0,10,0,0" Height="180">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"></RowDefinition>
+                                        <RowDefinition Height="0.1*"></RowDefinition>
+                                        <RowDefinition Height="3*"></RowDefinition>
+                                        <RowDefinition Height="0.1*"></RowDefinition>
+                                        <RowDefinition Height="auto"></RowDefinition>
+                                        <RowDefinition Height="0.1*"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.1*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                                        <ColumnDefinition Width="7*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Ellipse Grid.Column="0" Grid.ColumnSpan="2" Fill="SteelBlue" Height="12" Width="12" 
+                                         HorizontalAlignment="Left"/>
+                                    <Frame Background="palegreen"
+                               Visibility="{Binding data.Read, Converter={StaticResource BooleanToVisibilityConverter}}"></Frame>
+
+                                    <TextBlock Grid.Column="2" Grid.ColumnSpan="2" Foreground="Gray" FontSize="20" Margin="0,10,0,0">
+                                <Run Text="{Binding data.author}"></Run>
+                                <Run Text="{Binding data.TimeAgo}" FontSize="14"></Run>
+                                    </TextBlock>
+
+                                    <Image  Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,5,10,5" HorizontalAlignment="Left"
+                                        Source="{Binding data.url}" >
+                                    </Image>
+
+
+                                    <TextBlock Grid.Row="2" Grid.Column="3"  Text="{Binding data.title}"
+                                   Margin="0,10,0,0"
+                                   TextWrapping="WrapWholeWords"
+                                   FontSize="18"
+                                   TextTrimming="CharacterEllipsis"
+                                   Foreground="Gray"></TextBlock>
+
+                                    <Grid Grid.Row="4" Grid.ColumnSpan="4" >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Button Background="Transparent" BorderThickness="0">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Source="/Images/Dismiss.png"></Image>
+
+                                                <TextBlock Text="Dissmis Post" Margin="5,0,0,0"
+                                                       FontSize="16" VerticalAlignment="Center"></TextBlock>
+
+                                            </StackPanel>
+                                        </Button>
+
+                                        <TextBlock Grid.Column="1" Foreground="#e59400" 
+                                        FontSize="16" VerticalAlignment="Center">
+                                        <Run Text="{Binding data.Comments}"></Run>
+                                        </TextBlock>
+                                    </Grid>
+
+                                    <Button Grid.Row="0" Grid.RowSpan="5"  Grid.Column="4" 
+                                            Background="Transparent" BorderThickness="0"
+                                            VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                                        <TextBlock Foreground="Gray" FontSize="20" HorizontalAlignment="Right">&gt;</TextBlock>
+                                    </Button>
+
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                </ListView.ItemTemplate>
+                </ListView>
+            </SplitView.Pane>
+
+            <Grid Background="#DAE0E6">
+              
+            </Grid>
+        </SplitView>
+    </Grid>
+</Page>

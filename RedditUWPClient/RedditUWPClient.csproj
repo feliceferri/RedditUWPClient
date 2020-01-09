@@ -128,6 +128,9 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainSplitted.xaml.cs">
+      <DependentUpon>MainSplitted.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\Reddit_Entry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\Commands\NoParamCommand.cs" />
@@ -141,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\CloseLogo.png" />
+    <Content Include="Images\Dismiss.png" />
     <Content Include="Images\RedditLogo.png" />
     <Content Include="Images\Save.png" />
     <Content Include="Properties\Default.rd.xml" />
@@ -160,6 +164,10 @@
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MainSplitted.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
