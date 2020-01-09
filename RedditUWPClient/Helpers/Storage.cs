@@ -44,7 +44,46 @@ namespace RedditUWPClient.Helpers
             return res;
         }
 
+        /// <summary>
+        /// FF: Will Replace Existing File
+        /// </summary>
+        /// <param name="fileNameWithExtension"></param>
+        /// <param name=""></param>
+        internal async Task<NoParam> WriteTextToFileAsync(string fileNameWithExtension, string data)
+        {
+            var res = new NoParam();
+            try
+            {
+                Windows.Storage.StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
 
-   
-}
+                StorageFile file = await localFolder.CreateFileAsync(fileNameWithExtension,
+                    CreationCollisionOption.ReplaceExisting);
+                await FileIO.WriteTextAsync(file, data);
+                res.Success = true;
+            }
+            catch(Exception ex)
+            {
+                res.Error = ex;
+            }
+            return res;
+        }
+
+        internal async Task<SingleParam<string>> ReadTextFromFileAsync(string fileNameWithExtension)
+        {
+            var res = new SingleParam<String>();
+            try
+            {
+                Windows.Storage.StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+
+                StorageFile file = await localFolder.GetFileAsync(fileNameWithExtension);
+                res.value = await FileIO.ReadTextAsync(file);
+                res.Success = true;
+            }
+            catch (Exception ex)
+            {
+                res.Error = ex;
+            }
+            return res;
+        }
+    }
 }

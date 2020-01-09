@@ -9,11 +9,14 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Popups;
 
 namespace RedditUWPClient.ViewModels
 {
     internal class VM_MainPage: INotifyPropertyChanged
     {
+
+        private const string ReadHistoryFileNameWithExt = "ReadHistory.txt";
 
         public VM_MainPage()
         {
@@ -56,6 +59,7 @@ namespace RedditUWPClient.ViewModels
                     ShowFlyOutImage = true;
                     ShowSaveImageButton = true;
                     SelectedEntry.data.Read = true;
+                    AddReadFlagToReadHistoryAsync(SelectedEntry.data.id);
                 }
 
               
@@ -127,7 +131,27 @@ namespace RedditUWPClient.ViewModels
 
                 if (res.Success == true)
                 {
-                    Reddit_Entries = new ObservableCollection<Child>(res.value.data.children);
+                    List<Models.Child> ListEntries = res.value.data.children;
+
+                    //Load ReadHistory and Match it by id
+                    try
+                    {
+                        HashSet<string> hashIds = await LoadReadHistoryAsync();
+                        foreach(var item in ListEntries)
+                        {
+                            if(hashIds.Contains(item.data.id))
+                            {
+                                item.data.Read = true;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //Main flow (showing posts is more important thatn persistance of Read posts
+                        //So always go along
+                    }
+
+                    Reddit_Entries = new ObservableCollection<Child>(ListEntries);
                 }
                 else
                 {
@@ -163,6 +187,46 @@ namespace RedditUWPClient.ViewModels
             }
         }
 
+        private async Task AddReadFlagToReadHistoryAsync(string id)
+        {
+            HashSet<string> hashSet = await LoadReadHistoryAsync();
+            if(hashSet == null)
+            {
+                hashSet = new HashSet<string>(); 
+            }
 
+            hashSet.Add(id);
+
+            try
+            {
+                var storage = new Helpers.Storage();
+                storage.WriteTextToFileAsync(ReadHistoryFileNameWithExt, Newtonsoft.Json.JsonConvert.SerializeObject(hashSet));
+            }
+            catch(Exception ex)
+            {
+                var messageDialog = new MessageDialog("Could not persist the History of Read posts." + Environment.NewLine + "Details: " + ex.Message);
+            }
+        }
+
+        private async Task<HashSet<string>> LoadReadHistoryAsync()
+        {
+            HashSet<string> res = null;
+
+            try
+            {
+                var storage = new Helpers.Storage();
+                var resData = await storage.ReadTextFromFileAsync(ReadHistoryFileNameWithExt);
+                if(resData.Success == true)
+                {
+                    res = Newtonsoft.Json.JsonConvert.DeserializeObject<HashSet<string>>(resData.value);
+                }
+            }
+            catch (Exception ex)
+            {
+                //FF: Wont show an error message. by returning null on the next pass it automatically will create a new file
+            }
+
+            return res;
+        }
     }
 }
