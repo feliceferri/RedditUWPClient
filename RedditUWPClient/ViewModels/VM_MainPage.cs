@@ -57,11 +57,7 @@ namespace RedditUWPClient.ViewModels
 
                 if (_SelectedEntry != null)
                 {
-                    //Show Flyout
-                    ShowFlyOutImage = true;
-                    ShowSaveImageButton = true;
                     SelectedEntry.data.Read = true;
-                    ShowDetails = true;
                     AddReadFlagToReadHistoryAsync(SelectedEntry.data.id);
                 }
 
@@ -109,17 +105,6 @@ namespace RedditUWPClient.ViewModels
             set
             {
                 _ShowReadFlag = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        bool _ShowDetails = false;
-        public bool ShowDetails
-        {
-            get { return _ShowDetails; }
-            set
-            {
-                _ShowDetails = value;
                 NotifyPropertyChanged();
             }
         }

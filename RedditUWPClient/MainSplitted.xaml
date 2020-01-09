@@ -17,6 +17,9 @@
     <Page.Resources>
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></Converters:BooleanToVisibilityConverter>
         <Converters:IsNullToVisibilityConverter x:Key="IsNullToVisibilityConverter"></Converters:IsNullToVisibilityConverter>
+        <Converters:BooleanPostReadToForegroundColorBrush x:Key="BooleanPostReadToForegroundColorBrush"></Converters:BooleanPostReadToForegroundColorBrush>
+        <Converters:BooleanToVisibilityConverter_Inverse x:Key="BooleanToVisibilityConverter_Inverse"></Converters:BooleanToVisibilityConverter_Inverse>
+        
     </Page.Resources>
 
     <Grid Background="#DAE0E6">
@@ -25,7 +28,7 @@
            OpenPaneLength="400">
             <SplitView.Pane>
                 <ListView x:Name="ListView_MainThread" 
-                          
+                          Background="Black"
                           ItemsSource="{Binding Reddit_Entries}"
                         SelectedItem="{Binding SelectedEntry, Mode=TwoWay}">
                 <ListView.ItemContainerStyle>
@@ -54,13 +57,17 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Ellipse Grid.Column="0" Grid.ColumnSpan="2" Fill="SteelBlue" Height="12" Width="12" 
-                                         HorizontalAlignment="Left"/>
-                                    <Frame Background="palegreen"
-                               Visibility="{Binding data.Read, Converter={StaticResource BooleanToVisibilityConverter}}"></Frame>
+                                         HorizontalAlignment="Left"
+                                             Visibility="{Binding data.Read, Converter={StaticResource BooleanToVisibilityConverter_Inverse}}"/>
+                                    
+                                   
 
-                                    <TextBlock Grid.Column="2" Grid.ColumnSpan="2" Foreground="Gray" FontSize="20" Margin="0,10,0,0">
+                                    <TextBlock Grid.Column="2" Grid.ColumnSpan="2" 
+                                               TextTrimming="CharacterEllipsis"
+                                               Foreground="{Binding data.Read, Converter={StaticResource BooleanPostReadToForegroundColorBrush}}" 
+                                               FontSize="16" Margin="0,10,0,0">
                                 <Run Text="{Binding data.author}"></Run>
-                                <Run Text="{Binding data.TimeAgo}" FontSize="14"></Run>
+                                <Run Text="{Binding data.TimeAgo}" FontSize="12"></Run>
                                     </TextBlock>
 
                                     <Image  Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,5,10,5" HorizontalAlignment="Left"
@@ -71,9 +78,10 @@
                                     <TextBlock Grid.Row="2" Grid.Column="3"  Text="{Binding data.title}"
                                    Margin="0,10,0,0"
                                    TextWrapping="WrapWholeWords"
-                                   FontSize="18"
+                                   FontSize="14"
                                    TextTrimming="CharacterEllipsis"
-                                   Foreground="Gray"></TextBlock>
+                                   Foreground="{Binding data.Read, Converter={StaticResource BooleanPostReadToForegroundColorBrush}}" 
+                                               ></TextBlock>
 
                                     <Grid Grid.Row="4" Grid.ColumnSpan="4" >
                                         <Grid.ColumnDefinitions>
@@ -83,7 +91,7 @@
 
                                         <Button Background="Transparent" BorderThickness="0">
                                             <StackPanel Orientation="Horizontal">
-                                                <Image Source="/Images/Dismiss.png"></Image>
+                                                <Image Source="/Images/Dismiss.png" MaxHeight="25"></Image>
 
                                                 <TextBlock Text="Dissmis Post" Margin="5,0,0,0"
                                                        FontSize="16" VerticalAlignment="Center"></TextBlock>
@@ -97,11 +105,11 @@
                                         </TextBlock>
                                     </Grid>
 
-                                    <Button Grid.Row="0" Grid.RowSpan="5"  Grid.Column="4" 
-                                            Background="Transparent" BorderThickness="0"
-                                            VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                                        <TextBlock Foreground="Gray" FontSize="20" HorizontalAlignment="Right">&gt;</TextBlock>
-                                    </Button>
+                                    <TextBlock Grid.Row="0" Grid.RowSpan="5"  Grid.Column="4" 
+                                            Foreground="Gray" FontSize="20" 
+                                             HorizontalAlignment="Right" VerticalAlignment="Center"
+                                             >&gt;</TextBlock>
+                                    
 
                                 </Grid>
                             </Border>
