@@ -120,6 +120,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\IsNullToVisibilityConverter.cs" />
     <Compile Include="ExtensionsMethods\DateTime_Extension.cs" />
     <Compile Include="Helpers\Network.cs" />
     <Compile Include="Helpers\Reddit.cs" />

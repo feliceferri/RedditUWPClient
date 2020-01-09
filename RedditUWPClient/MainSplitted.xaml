@@ -16,9 +16,10 @@
     </Page.DataContext>
     <Page.Resources>
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></Converters:BooleanToVisibilityConverter>
+        <Converters:IsNullToVisibilityConverter x:Key="IsNullToVisibilityConverter"></Converters:IsNullToVisibilityConverter>
     </Page.Resources>
-    
-    <Grid>
+
+    <Grid Background="#DAE0E6">
         <SplitView IsPaneOpen="True"
            DisplayMode="Inline"
            OpenPaneLength="400">
@@ -109,9 +110,61 @@
                 </ListView>
             </SplitView.Pane>
 
-            <Grid Background="#DAE0E6">
-              
+            <Grid Background="#DAE0E6"
+                  Visibility="{Binding SelectedEntry, Converter={StaticResource IsNullToVisibilityConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5*"></RowDefinition>
+                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="0.5*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                    <ColumnDefinition Width="10*"></ColumnDefinition>
+                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                
+                <Grid Grid.Row="1" Grid.Column="1" Background="White" Margin="0,10,0,0" CornerRadius="8" VerticalAlignment="Center"
+                       DataContext="{Binding SelectedEntry}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.2*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="2*"></RowDefinition>
+                        <RowDefinition Height="5*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                     </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.7*"></ColumnDefinition>
+                        <ColumnDefinition Width="0.25*"></ColumnDefinition>
+                        <ColumnDefinition Width="9*"></ColumnDefinition>
+                        <ColumnDefinition Width="0.25*"></ColumnDefinition>
+                        <ColumnDefinition Width="0.7*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="1" Grid.Column="2" Foreground="Gray" FontSize="20" Margin="0,10,0,0">
+                            <Run Text="Posted by"></Run>
+                            <Run Text="{Binding data.author}"></Run>
+                            <Run Text="{Binding data.TimeAgo}"></Run>
+                    </TextBlock>
+                    <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding data.title}"
+                                  FontSize="22"
+                                   Margin="0,20,0,0"
+                                   TextWrapping="WrapWholeWords"  
+                                   Foreground="Black"></TextBlock>
+
+                    <Image  Grid.Row="3" Grid.Column="2" Margin="0,30,0,5"
+                                Source="{Binding data.url}" >
+
+                    </Image>
+                    <TextBlock Grid.Row="4" Grid.Column="2" Foreground="Gray" 
+                                   Margin="0,20,0,10" FontSize="18">
+                                <Run Text="{Binding data.Comments}"></Run>
+                                <Run Text="Comments"></Run>
+                    </TextBlock>
+                </Grid>
             </Grid>
         </SplitView>
+
+
+      
     </Grid>
 </Page>

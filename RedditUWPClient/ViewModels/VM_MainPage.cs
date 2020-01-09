@@ -20,6 +20,8 @@ namespace RedditUWPClient.ViewModels
 
         public VM_MainPage()
         {
+
+           
            cmdCloseFlyOut = new NoParamCommand(CloseFlyOut);
            cmdSaveToGallery = new NoParamCommandAsync(SaveToGallery);
                        
@@ -59,6 +61,7 @@ namespace RedditUWPClient.ViewModels
                     ShowFlyOutImage = true;
                     ShowSaveImageButton = true;
                     SelectedEntry.data.Read = true;
+                    ShowDetails = true;
                     AddReadFlagToReadHistoryAsync(SelectedEntry.data.id);
                 }
 
@@ -106,6 +109,17 @@ namespace RedditUWPClient.ViewModels
             set
             {
                 _ShowReadFlag = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        bool _ShowDetails = false;
+        public bool ShowDetails
+        {
+            get { return _ShowDetails; }
+            set
+            {
+                _ShowDetails = value;
                 NotifyPropertyChanged();
             }
         }
