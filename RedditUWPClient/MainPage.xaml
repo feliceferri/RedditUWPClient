@@ -28,10 +28,13 @@
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Row="0" Grid.ColumnSpan="3" Background="White">
-            
+            <Image Source="/Images/RedditLogo.png" HorizontalAlignment="Left" Margin="15,3,3,3" ></Image>
         </Grid>
 
-            <ListView x:Name="ListView_MainThread" Grid.Row="2" Grid.Column="1"
+
+     
+        
+        <ListView x:Name="ListView_MainThread" Grid.Row="2" Grid.Column="1"
                      ItemsSource="{Binding Reddit_Entries}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
@@ -87,10 +90,14 @@
                 </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-        
+
+        <ProgressRing  Grid.Row="2" Grid.Column="1" IsActive="{Binding Processing}">
+        </ProgressRing>
 
         <Grid Grid.Row="2" Grid.Column ="1" >
 
         </Grid>
+
+        
     </Grid>
 </Page>

@@ -19,12 +19,17 @@ namespace RedditUWPClient.ViewModels
            LoadEntriesAsync(); //FF: Cant and doesnt need to be awaited as the UI will be notified when the IObservableCollection is filled
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+
+#region Properties
         ObservableCollection<Child> _Reddit_Entries = null;
+
         public ObservableCollection<Child> Reddit_Entries { 
             get {return _Reddit_Entries;}  
             set { _Reddit_Entries = value;
@@ -32,22 +37,30 @@ namespace RedditUWPClient.ViewModels
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        bool _Processing = false;
+        public bool Processing
+        {
+            get { return _Processing; }
+            set
+            {
+                _Processing = value;
+                NotifyPropertyChanged();
+            }
+        }
+#endregion
 
         private async Task LoadEntriesAsync()
         {
             try
             {
-                
+                Processing = true;
+
                 Reddit reddit = new Reddit();
                 var res = await reddit.GetEntriesAsync();
 
                 if (res.Success == true)
                 {
-                    //Reddit_Entries = null;
                     Reddit_Entries = new ObservableCollection<Child>(res.value.data.children);
-                    //Reddit_Entries = SamplingData.RedditEntries;
-                    Reddit_Entries.RemoveAt(0);
                 }
                 else
                 {
@@ -57,6 +70,10 @@ namespace RedditUWPClient.ViewModels
             catch (Exception ex)
             {
                 Reddit_Entries = null;
+            }
+            finally
+            {
+                Processing = false;
             }
         }
 
