@@ -18,7 +18,7 @@
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></Converters:BooleanToVisibilityConverter>
     </Page.Resources>
     
-    <Grid Background="#DAE0E6">
+    <Grid x:Name="MainGrid" Background="#DAE0E6">
         <Grid.RowDefinitions>
             <RowDefinition Height="0.12*"></RowDefinition>
             <RowDefinition Height="0.03*"></RowDefinition>
@@ -26,9 +26,9 @@
             <RowDefinition Height="0.12*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.4*"></ColumnDefinition>
+            <ColumnDefinition x:Name="MaingGrid_LeftColumnDefinition" Width="0.4*"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="0.4*"></ColumnDefinition>
+            <ColumnDefinition x:Name="MaingGrid_RightColumnDefinition" Width="0.4*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Row="0" Grid.ColumnSpan="3" Background="White">
@@ -146,7 +146,7 @@
                                 </Button>
 
                         <Button Grid.Row="2" BorderThickness="0" Background="Transparent"
-                                    HorizontalAlignment="Center" Margin="10"
+                                    HorizontalAlignment="Center" Margin="10" 
                                     Command="{Binding cmdSaveToGallery}"
                                     Visibility="{Binding ShowSaveImageButton, Converter={StaticResource BooleanToVisibilityConverter}}">
                                     <Image Source="/Images/Save.png"  ></Image>
