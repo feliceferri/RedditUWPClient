@@ -121,6 +121,11 @@
                 </ListView>
             </SplitView.Pane>
 
+            <Grid>
+                <ProgressRing   IsActive="{Binding Processing}">
+                </ProgressRing>
+
+            
             <Grid Background="#DAE0E6"
                   Visibility="{Binding SelectedEntry, Converter={StaticResource IsNullToVisibilityConverter}}">
                 <Grid.RowDefinitions>
@@ -178,9 +183,10 @@
                     </TextBlock>
                 </Grid>
 
-
+                
+                
                 <Grid x:Name="Flyout_OpaqueBackground" Background="Black" Opacity="0.6"
-                    Grid.ColumnSpan="3" Grid.RowSpan="4"
+                    Grid.ColumnSpan="3" Grid.RowSpan="3"
                     Visibility="{Binding ShowFlyOutImage, Converter={StaticResource BooleanToVisibilityConverter}}">
                 </Grid>
                 
@@ -235,7 +241,8 @@
                 </Grid>
 
             </Grid>
-
+            </Grid>
+            
         </SplitView>
 
 
