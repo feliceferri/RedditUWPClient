@@ -9,7 +9,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    x:Name="ThisPage">
 
     <Page.DataContext>
         <ViewModels:VM_MainPage/>
@@ -161,20 +162,87 @@
                                    TextWrapping="WrapWholeWords"  
                                    Foreground="Black"></TextBlock>
 
-                    <Image  Grid.Row="3" Grid.Column="2" Margin="0,30,0,5"
-                                Source="{Binding data.url}" >
-
-                    </Image>
+                    <Button Grid.Row="3" Grid.Column="2" Margin="0,30,0,5"
+                            Background="Transparent" BorderThickness="0"
+                            HorizontalAlignment="Center"
+                            Command="{Binding ElementName=ThisPage, Path=DataContext.cmdEnlargePicture}">
+                            
+                            <Image  
+                                Source="{Binding data.url}"  >
+                            </Image>
+                    </Button>
                     <TextBlock Grid.Row="4" Grid.Column="2" Foreground="Gray" 
                                    Margin="0,20,0,10" FontSize="18">
                                 <Run Text="{Binding data.Comments}"></Run>
                                 <Run Text="Comments"></Run>
                     </TextBlock>
                 </Grid>
+
+
+                <Grid x:Name="Flyout_OpaqueBackground" Background="Black" Opacity="0.6"
+                    Grid.ColumnSpan="3" Grid.RowSpan="4"
+                    Visibility="{Binding ShowFlyOutImage, Converter={StaticResource BooleanToVisibilityConverter}}">
+                </Grid>
+                
+                <Grid x:Name="Flyout_Image" 
+              Grid.ColumnSpan="3" Grid.RowSpan="4" VerticalAlignment="Center"
+              Visibility="{Binding ShowFlyOutImage, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="10*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="10*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.RowSpan="3" Grid.ColumnSpan="3" 
+                        Background="Transparent" BorderThickness="0" 
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        Command="{Binding cmdCloseFlyOut}" >
+                        </Button>
+
+                        <Frame Grid.Row="1" Grid.Column="1" Background="White" CornerRadius="10" Opacity="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1.2*"></RowDefinition>
+                                    <RowDefinition Height="8*"></RowDefinition>
+                                    <RowDefinition Height="2*"></RowDefinition>
+                                </Grid.RowDefinitions>
+
+                                <Image Grid.RowSpan="3" Source="{Binding SelectedEntry.data.url}"></Image>
+
+                                <Button Margin="10" BorderThickness="0" Background="Transparent"
+                                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                                    Command="{Binding cmdCloseFlyOut}">
+                                    <Image Source="/Images/CloseLogo.png"  ></Image>
+                                </Button>
+
+                                <Button Grid.Row="2" BorderThickness="0" Background="Transparent"
+                                    HorizontalAlignment="Center" Margin="10" 
+                                    Command="{Binding cmdSaveToGallery}"
+                                    Visibility="{Binding ShowSaveImageButton, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <Image Source="/Images/Save.png"  ></Image>
+                                </Button>
+
+
+                            </Grid>
+                        </Frame>
+                    </Grid>
+                </Grid>
+
             </Grid>
+
         </SplitView>
 
 
-      
+        
+
+
     </Grid>
+    
+    
 </Page>

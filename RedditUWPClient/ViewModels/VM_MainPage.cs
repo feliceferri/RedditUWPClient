@@ -23,6 +23,8 @@ namespace RedditUWPClient.ViewModels
            cmdCloseFlyOut = new NoParamCommand(CloseFlyOut);
            cmdSaveToGallery = new NoParamCommandAsync(SaveToGallery);
            cmdDismissEntry = new ParamCommand<Models.Data1>(DismissEntry);
+           cmdEnlargePicture = new NoParamCommand(EnlargePicture);
+            
 
 
            LoadEntriesAsync(); //FF: Cant and doesnt need to be awaited as the UI will be notified when the IObservableCollection is filled
@@ -116,6 +118,8 @@ namespace RedditUWPClient.ViewModels
         public NoParamCommand cmdCloseFlyOut { get; set; }
         public NoParamCommandAsync cmdSaveToGallery { get; set; }
         public ParamCommand<Models.Data1> cmdDismissEntry { get; set; }
+        public NoParamCommand cmdEnlargePicture { get; set; }
+        
 
 
         #endregion
@@ -196,8 +200,7 @@ namespace RedditUWPClient.ViewModels
         internal void CloseFlyOut()
         {
             ShowFlyOutImage = false;
-            SelectedEntry = null; //FF: So the user can select it again, to see the image for 2nd time
-        }
+         }
 
         internal async Task SaveToGallery()
         {
@@ -227,6 +230,13 @@ namespace RedditUWPClient.ViewModels
                 new Services.Persistance().AddDismissedAsync(Child.data.id);
             }
             
+        }
+
+        private void EnlargePicture()
+        {
+            //Show Flyout
+            ShowFlyOutImage = true;
+            ShowSaveImageButton = true;
         }
     }
 }
