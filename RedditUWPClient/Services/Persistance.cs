@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +13,7 @@ namespace RedditUWPClient.Services
     {
         private const string ReadHistoryFileNameWithExt = "ReadHistory.txt";
         private const string DissmissedFileNameWithExt = "Dismissed.txt";
-
+        
         internal async Task AddReadFlagToReadHistoryAsync(string id)
         {
             HashSet<string> hashSet = await LoadReadHistoryAsync();
@@ -54,6 +56,8 @@ namespace RedditUWPClient.Services
 
             return res;
         }
+
+       
 
         internal async Task AddDismissedAsync(string id)
         {

@@ -29,20 +29,26 @@
     
 
     <Grid Background="#DAE0E6">
-        <SplitView IsPaneOpen="True"
+        <SplitView x:Name="MainSplitView" IsPaneOpen="True" 
            DisplayMode="Inline"
            OpenPaneLength="400">
+
             <SplitView.Pane>
                 <Grid>
                     <Grid.RowDefinitions >
                         <RowDefinition Height="10*"></RowDefinition>
                         <RowDefinition Height="0.6*"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <RefreshContainer>
-                    <ListView x:Name="ListView_MainThread" 
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition x:Name="VisibleCol_WhenPanelIsCollapsed" Width="0"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    
+                    <RefreshContainer Grid.Column="1">
+                    <ListView  x:Name="ListView_MainThread"  
                           Background="Black"
                           ItemsSource="{Binding Reddit_Entries}"
-                        SelectedItem="{Binding SelectedEntry, Mode=TwoWay}">
+                        SelectedItem="{Binding SelectedEntry, Mode=TwoWay}" PointerEntered="ListView_MainThread_PointerEntered" PointerExited="ListView_MainThread_PointerExited">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -82,12 +88,15 @@
                                 <Run Text="{Binding data.TimeAgo}" FontSize="12"></Run>
                                         </TextBlock>
 
-                                        <Image  Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,5,10,5" HorizontalAlignment="Left"
-                                        Source="{Binding data.url}" >
-                                        </Image>
+                                            <Image  Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,5,10,5" HorizontalAlignment="Left"
+                                                    Source="{Binding data.url}" >
+                                            </Image>
+                                            <!--FF: Forbidden Access to Thumbnails Source="{Binding data.preview.images[0].resolutions[1].url}" >-->
+
+                                           
 
 
-                                        <TextBlock Grid.Row="2" Grid.Column="3"  Text="{Binding data.title}"
+                                            <TextBlock Grid.Row="2" Grid.Column="3"  Text="{Binding data.title}"
                                    Margin="0,10,0,0"
                                    TextWrapping="WrapWholeWords"
                                    FontSize="14"
@@ -139,7 +148,8 @@
                 </Grid>
             </SplitView.Pane>
 
-            <Grid>
+            <Grid x:Name="GridRightContent" Tapped="GridRightContent_Tapped">
+            
                 <ProgressRing   IsActive="{Binding Processing}">
                 </ProgressRing>
 

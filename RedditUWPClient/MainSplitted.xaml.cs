@@ -17,16 +17,82 @@ using Windows.UI.Xaml.Navigation;
 
 namespace RedditUWPClient
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
+    
     public sealed partial class MainSplitted : Page
     {
+
+        /*FF: 
+            All the code behind refers to code explicity related with this particular view
+            especifally the business rules to open and collapse the split panel
+            and the Dismiss All button, that has to calculate which are the Entries visible
+            so they can be removed.
+            Based on that I choose to isolate this code from the modelview, and leave it as part of the the view.
+        */
+
+
+        private enum eDisplayMode
+        {
+            Portrait,
+            Landscape
+        }
+
+        private enum eSplittedPanelState
+        {
+            Open,
+            Close
+        }
+
+        private eDisplayMode _DisplayMode;
+        private GridLength _Original_VisibleCol_WhenPanelIsCollapsed;
+
         public MainSplitted()
         {
             this.InitializeComponent();
+
+            this.SizeChanged += MainPage_SizeChanged;
+            ((ViewModels.VM_MainPage)this.DataContext).EntrySelected += MainSplitted_EntrySelected;
+
         }
 
+        private void SetPanelState(eSplittedPanelState state)
+        {
+            if(state == eSplittedPanelState.Close)
+            {
+                MainSplitView.IsPaneOpen = false;
+                _Original_VisibleCol_WhenPanelIsCollapsed = new GridLength(0.2, GridUnitType.Star);  //Wider so user can click it and open the Panel Again
+            }
+            else
+            {
+                MainSplitView.IsPaneOpen = true;
+                _Original_VisibleCol_WhenPanelIsCollapsed = new GridLength(0, GridUnitType.Star);
+            }
+        }
+
+        private void MainSplitted_EntrySelected(Models.Child Entry)
+        {
+            if (_DisplayMode == eDisplayMode.Portrait)
+            {
+                SetPanelState(eSplittedPanelState.Close);
+            }
+        }
+
+        private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (this.ActualHeight > this.ActualWidth)
+            {
+                _DisplayMode = eDisplayMode.Portrait;
+                MainSplitView.DisplayMode = SplitViewDisplayMode.CompactInline;
+                SetPanelState(eSplittedPanelState.Close);
+
+            }
+            else
+            {
+                _DisplayMode = eDisplayMode.Landscape;
+                MainSplitView.DisplayMode = SplitViewDisplayMode.Inline;
+                SetPanelState(eSplittedPanelState.Open);
+                
+            }
+        }
 
         private void btnDismissVisibles_Click(object sender, RoutedEventArgs e)
         {
@@ -55,6 +121,29 @@ namespace RedditUWPClient
                    ((ViewModels.VM_MainPage)this.DataContext).DismissEntries(ListToDismiss);
 
         }
-        
+
+        private void ListView_MainThread_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if(_DisplayMode == eDisplayMode.Portrait)
+            {
+                SetPanelState(eSplittedPanelState.Open);
+            }
+        }
+
+        private void GridRightContent_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (_DisplayMode == eDisplayMode.Portrait)
+            {
+                SetPanelState(eSplittedPanelState.Close);
+            }
+        }
+
+        private void ListView_MainThread_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            if (_DisplayMode == eDisplayMode.Portrait)
+            {
+                SetPanelState(eSplittedPanelState.Close);
+            }
+        }
     }
 }

@@ -57,7 +57,7 @@ namespace RedditUWPClient.Models
         public int pwls { get; set; }
         public string link_flair_css_class { get; set; }
         public int downs { get; set; }
-        public int thumbnail_height { get; set; }
+        public int? thumbnail_height { get; set; }
         public bool hide_score { get; set; }
         public string name { get; set; }
         public bool quarantine { get; set; }
@@ -67,7 +67,7 @@ namespace RedditUWPClient.Models
         public int ups { get; set; }
         public int total_awards_received { get; set; }
         public Media_Embed media_embed { get; set; }
-        public int thumbnail_width { get; set; }
+        public int? thumbnail_width { get; set; }
         public object author_flair_template_id { get; set; }
         public bool is_original_content { get; set; }
         public object[] user_reports { get; set; }

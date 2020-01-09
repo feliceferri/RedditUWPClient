@@ -16,6 +16,9 @@ namespace RedditUWPClient.ViewModels
     internal class VM_MainPage: INotifyPropertyChanged
     {
 
+        public delegate void EntrySelectedHandler(Models.Child Entry);
+        public event EntrySelectedHandler EntrySelected;
+
         public VM_MainPage()
         {
 
@@ -35,6 +38,13 @@ namespace RedditUWPClient.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        private void OnEntrySelected(Models.Child Entry)
+        {
+            if(EntrySelected != null)
+            {
+                EntrySelected(Entry);
+            }
+        }
 
 #region Properties
         ObservableCollection<Child> _Reddit_Entries = null;
@@ -58,6 +68,7 @@ namespace RedditUWPClient.ViewModels
                 if (_SelectedEntry != null)
                 {
                     SelectedEntry.data.Read = true;
+                    OnEntrySelected(SelectedEntry);
                     new Services.Persistance().AddReadFlagToReadHistoryAsync(SelectedEntry.data.id);
                 }
 
