@@ -24,7 +24,9 @@ namespace RedditUWPClient.ViewModels
            
            cmdCloseFlyOut = new NoParamCommand(CloseFlyOut);
            cmdSaveToGallery = new NoParamCommandAsync(SaveToGallery);
-                       
+           cmdDismissEntry = new ParamCommand<Models.Data1>(DismissEntry);
+
+
            LoadEntriesAsync(); //FF: Cant and doesnt need to be awaited as the UI will be notified when the IObservableCollection is filled
         }
 
@@ -115,6 +117,7 @@ namespace RedditUWPClient.ViewModels
 
         public NoParamCommand cmdCloseFlyOut { get; set; }
         public NoParamCommandAsync cmdSaveToGallery { get; set; }
+        public ParamCommand<Models.Data1> cmdDismissEntry { get; set; }
 
 
         #endregion
@@ -226,6 +229,20 @@ namespace RedditUWPClient.ViewModels
             }
 
             return res;
+        }
+
+        private void DismissEntry(Models.Data1 entry)
+        {
+            
+            var Child = (from p in Reddit_Entries
+                         where p.data == entry
+                         select p)
+                        .FirstOrDefault();
+            if (Child != null)
+            {
+                Reddit_Entries.Remove(Child);
+            }
+            
         }
     }
 }

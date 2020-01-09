@@ -89,10 +89,12 @@
                                             <ColumnDefinition Width="*"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
 
-                                        <Button Background="Transparent" BorderThickness="0">
+                                        <Button Background="Transparent" BorderThickness="0"
+                                                Command="{Binding ElementName=ListView_MainThread,Path=DataContext.cmdDismissEntry}" 
+                                                CommandParameter="{x:Bind data, Mode=OneWay}">
+                                            
                                             <StackPanel Orientation="Horizontal">
                                                 <Image Source="/Images/Dismiss.png" MaxHeight="25"></Image>
-
                                                 <TextBlock Text="Dissmis Post" Margin="5,0,0,0"
                                                        FontSize="16" VerticalAlignment="Center"></TextBlock>
 
