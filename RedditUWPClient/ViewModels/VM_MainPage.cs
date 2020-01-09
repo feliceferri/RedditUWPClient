@@ -28,7 +28,9 @@ namespace RedditUWPClient.ViewModels
            cmdDismissEntry = new ParamCommand<Models.Data1>(DismissEntry);
            cmdEnlargePicture = new NoParamCommand(EnlargePicture);
            
-            LoadEntriesAsync(); //FF: Cant and doesnt need to be awaited as the UI will be notified when the IObservableCollection is filled
+            
+            LoadEntriesAsync(Services.SuspensionManager.PointerTo_ListOfEntries); //FF: Cant and doesnt need to be awaited as the UI will be notified when the IObservableCollection is filled
+            SelectedEntry = Services.SuspensionManager.PointerTo_SelectedEntry;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -47,7 +49,7 @@ namespace RedditUWPClient.ViewModels
         }
 
 #region Properties
-        ObservableCollection<Child> _Reddit_Entries = null;
+        static ObservableCollection<Child> _Reddit_Entries = null;
 
         public ObservableCollection<Child> Reddit_Entries { 
             get {return _Reddit_Entries;}  
@@ -69,6 +71,7 @@ namespace RedditUWPClient.ViewModels
                 {
                     SelectedEntry.data.Read = true;
                     OnEntrySelected(SelectedEntry);
+                    Services.SuspensionManager.PointerTo_SelectedEntry = _SelectedEntry;
                     new Services.Persistance().AddReadFlagToReadHistoryAsync(SelectedEntry.data.id);
                 }
 
@@ -134,24 +137,33 @@ namespace RedditUWPClient.ViewModels
 
         #endregion
 
-        private async Task LoadEntriesAsync()
+        private async Task LoadEntriesAsync(List<Child> Entries)
         {
             try
             {
                 Processing = true;
 
-                Reddit reddit = new Reddit();
-                var res = await reddit.GetEntriesAsync();
-
-                if (res.Success == true)
+                if (Entries == null || Entries.Count == 0)
                 {
-                    List<Models.Child> ListEntries = res.value.data.children;
+                    Reddit reddit = new Reddit();
+                    var res = await reddit.GetEntriesAsync();
+                    if (res.Success == false)
+                    {
+                        Reddit_Entries = null;
+                        return;
+                    }
+
+                    Entries = res.value.data.children;
+                }
+
+                
+                   
 
                     //Load ReadHistory and Match it by id
                     try
                     {
                         HashSet<string> hashIds = await new Services.Persistance().LoadReadHistoryAsync();
-                        foreach(var item in ListEntries)
+                        foreach(var item in Entries)
                         {
                             if(hashIds.Contains(item.data.id))
                             {
@@ -170,7 +182,7 @@ namespace RedditUWPClient.ViewModels
                     {
                         HashSet<string> hashIds = await new Services.Persistance().LoadDismissedAsync();
                         List<Child> ListToRemove = new List<Child>();
-                        foreach (var item in ListEntries)
+                        foreach (var item in Entries)
                         {
                             if (hashIds.Contains(item.data.id))
                             {
@@ -180,7 +192,7 @@ namespace RedditUWPClient.ViewModels
 
                         foreach(var item in ListToRemove)
                         {
-                            ListEntries.Remove(item);
+                        Entries.Remove(item);
                         }
                         
                     }
@@ -190,12 +202,9 @@ namespace RedditUWPClient.ViewModels
                         //So always go along
                     }
 
-                    Reddit_Entries = new ObservableCollection<Child>(ListEntries);
-                }
-                else
-                {
-                    Reddit_Entries = null;
-                }
+                    Services.SuspensionManager.PointerTo_ListOfEntries = Entries;
+                    Reddit_Entries = new ObservableCollection<Child>(Entries);
+                
             }
             catch (Exception ex)
             {

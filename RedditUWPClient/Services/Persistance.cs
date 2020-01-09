@@ -14,6 +14,7 @@ namespace RedditUWPClient.Services
         private const string ReadHistoryFileNameWithExt = "ReadHistory.txt";
         private const string DissmissedFileNameWithExt = "Dismissed.txt";
         
+
         internal async Task AddReadFlagToReadHistoryAsync(string id)
         {
             HashSet<string> hashSet = await LoadReadHistoryAsync();
@@ -24,40 +25,30 @@ namespace RedditUWPClient.Services
 
             hashSet.Add(id);
 
-            try
+            var res = await SaveJsonAsync<HashSet<string>>(ReadHistoryFileNameWithExt, hashSet);
+            if(res.Success == false)
             {
-                var storage = new Helpers.Storage();
-                storage.WriteTextToFileAsync(ReadHistoryFileNameWithExt, Newtonsoft.Json.JsonConvert.SerializeObject(hashSet));
-            }
-            catch (Exception ex)
-            {
-                var messageDialog = new MessageDialog("Could not persist the History of Read posts." + Environment.NewLine + "Details: " + ex.Message);
+                var messageDialog = new MessageDialog("Could not persist the History of Read posts." + Environment.NewLine + "Details: " + res.Error.Message);
                 await messageDialog.ShowAsync();
             }
+            
         }
 
         internal async Task<HashSet<string>> LoadReadHistoryAsync()
         {
-            HashSet<string> res = null;
 
-            try
+            var res = await LoadJsonAsync<HashSet<string>>(ReadHistoryFileNameWithExt);
+            if (res.Success == true)
             {
-                var storage = new Helpers.Storage();
-                var resData = await storage.ReadTextFromFileAsync(ReadHistoryFileNameWithExt);
-                if (resData.Success == true)
-                {
-                    res = Newtonsoft.Json.JsonConvert.DeserializeObject<HashSet<string>>(resData.value);
-                }
+                return res.value;
             }
-            catch (Exception ex)
+            else
             {
-                //FF: Wont show an error message. by returning null on the next pass it automatically will create a new file
+                return null;
             }
 
-            return res;
         }
-
-       
+               
 
         internal async Task AddDismissedAsync(string id)
         {
@@ -77,35 +68,64 @@ namespace RedditUWPClient.Services
                 hashSet.Add(id);
             }
 
-            try
+            var res = await SaveJsonAsync<HashSet<string>>(DissmissedFileNameWithExt, hashSet);
+            if (res.Success == false)
             {
-                var storage = new Helpers.Storage();
-                storage.WriteTextToFileAsync(DissmissedFileNameWithExt, Newtonsoft.Json.JsonConvert.SerializeObject(hashSet));
-            }
-            catch (Exception ex)
-            {
-                var messageDialog = new MessageDialog("Could not persist the Dismiss action." + Environment.NewLine + "Details: " + ex.Message);
+                var messageDialog = new MessageDialog("Could not persist the Dismiss action." + Environment.NewLine + "Details: " + res.Error.Message);
                 await messageDialog.ShowAsync();
             }
-        }
+
+            }
        
 
         internal async Task<HashSet<string>> LoadDismissedAsync()
         {
-            HashSet<string> res = null;
+            
+            var res = await LoadJsonAsync<HashSet<string>>(DissmissedFileNameWithExt); 
+            if(res.Success == true)
+            {
+                return res.value;
+            }
+            else
+            {
+                return null;
+            }
+            
+        }
+
+        internal async Task<Helpers.Responses.NoParam> SaveJsonAsync<T>(string FileNameWithExt, T data)
+        {
+            Helpers.Responses.NoParam res = new Helpers.Responses.NoParam();
+            try
+            {
+                var storage = new Helpers.Storage();
+                await storage.WriteTextToFileAsync(FileNameWithExt, Newtonsoft.Json.JsonConvert.SerializeObject(data));
+            }
+            catch (Exception ex)
+            {
+                res.Error = ex;
+            }
+
+            return res;
+        }
+
+        internal async Task<Helpers.Responses.SingleParam<T>> LoadJsonAsync<T>(string FileNameWithExt)
+        {
+            Helpers.Responses.SingleParam<T> res = new Helpers.Responses.SingleParam<T>();
 
             try
             {
                 var storage = new Helpers.Storage();
-                var resData = await storage.ReadTextFromFileAsync(DissmissedFileNameWithExt);
+                var resData = await storage.ReadTextFromFileAsync(FileNameWithExt);
                 if (resData.Success == true)
                 {
-                    res = Newtonsoft.Json.JsonConvert.DeserializeObject<HashSet<string>>(resData.value);
+                    res.value = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(resData.value); ;
+                    res.Success = true;
                 }
             }
             catch (Exception ex)
             {
-                //FF: Wont show an error message. by returning null on the next pass it automatically will create a new file
+                res.Error = ex;
             }
 
             return res;
