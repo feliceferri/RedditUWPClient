@@ -55,7 +55,10 @@ namespace RedditUWPClient.ViewModels
                     //Show Flyout
                     ShowFlyOutImage = true;
                     ShowSaveImageButton = true;
+                    SelectedEntry.data.Read = true;
                 }
+
+              
             }
         }
 
@@ -91,6 +94,18 @@ namespace RedditUWPClient.ViewModels
                 NotifyPropertyChanged();
             }
         }
+
+        bool _ShowReadFlag = false;
+        public bool ShowReadFlag
+        {
+            get { return _ShowReadFlag; }
+            set
+            {
+                _ShowReadFlag = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Commands

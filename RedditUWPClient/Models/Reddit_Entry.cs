@@ -3,14 +3,16 @@ using RedditUWPClient.ExtensionsMethods;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace RedditUWPClient.Models
 {
 
-    public class Reddit_Entry
+    public class Reddit_Entry 
     {
         public string kind { get; set; }
         public Data data { get; set; }
@@ -31,8 +33,15 @@ namespace RedditUWPClient.Models
         public Data1 data { get; set; }
     }
 
-    public class Data1
+    public class Data1 : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public object approved_at_utc { get; set; }
         public string subreddit { get; set; }
         public string selftext { get; set; }
@@ -148,20 +157,20 @@ namespace RedditUWPClient.Models
                 DateTime dt = new DateTime().UnixUTCTimeToLocalDateTime(this.created_utc);
                 TimeSpan diff = (DateTime.Now - dt);
 
-                if(diff.TotalHours  <1)
+                if (diff.TotalHours < 1)
                 {
                     return Math.Floor(diff.TotalMinutes) + " minutes ago";
                 }
-                else if(diff.TotalDays < 1)
+                else if (diff.TotalDays < 1)
                 {
                     return Math.Floor(diff.TotalHours) + " hours ago";
                 }
-                else 
+                else
                 {
                     return Math.Floor(diff.TotalDays) + " days ago";
                 }
 
-                
+
             }
         }
 
@@ -180,11 +189,11 @@ namespace RedditUWPClient.Models
                 }
                 else if (num_comments > 1000)
                 {
-                    return Math.Round((decimal)num_comments / 1000,1) + "k comments";
+                    return Math.Round((decimal)num_comments / 1000, 1) + "k comments";
                 }
                 else if (num_comments > 1000000)
                 {
-                    return Math.Round((decimal)num_comments / 1000000,1) + "M comments";
+                    return Math.Round((decimal)num_comments / 1000000, 1) + "M comments";
                 }
                 else
                 {
@@ -194,6 +203,14 @@ namespace RedditUWPClient.Models
 
             }
         }
+
+        private bool _Read = false;
+        [JsonIgnore]
+        public bool Read { get { return _Read; } 
+            set { _Read = value;
+                NotifyPropertyChanged();
+            } }
+        
     }
 
     public class Media_Embed

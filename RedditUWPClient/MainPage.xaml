@@ -65,7 +65,9 @@
                                     <ColumnDefinition Width="0.7*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
 
-                        <Frame Grid.RowSpan="4" Background="#F8F9FA"></Frame>
+                        <Frame Grid.RowSpan="5" Background="#F8F9FA"></Frame>
+                        <Frame Grid.RowSpan="3" Background="palegreen"
+                               Visibility="{Binding data.Read, Converter={StaticResource BooleanToVisibilityConverter}}"></Frame>
 
                         <TextBlock Grid.Row="1" Grid.Column="2" Foreground="Gray" FontSize="10" Margin="0,10,0,0">
                             <Run Text="Posted by"></Run>
