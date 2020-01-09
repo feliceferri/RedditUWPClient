@@ -136,6 +136,7 @@
     </Compile>
     <Compile Include="Models\Reddit_Entry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Persistance.cs" />
     <Compile Include="ViewModels\Commands\NoParamCommand.cs" />
     <Compile Include="ViewModels\Commands\NoParamCommandAsync.cs" />
     <Compile Include="ViewModels\Commands\ParamCommand.cs" />

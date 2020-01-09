@@ -16,8 +16,6 @@ namespace RedditUWPClient.ViewModels
     internal class VM_MainPage: INotifyPropertyChanged
     {
 
-        private const string ReadHistoryFileNameWithExt = "ReadHistory.txt";
-
         public VM_MainPage()
         {
 
@@ -60,7 +58,7 @@ namespace RedditUWPClient.ViewModels
                 if (_SelectedEntry != null)
                 {
                     SelectedEntry.data.Read = true;
-                    AddReadFlagToReadHistoryAsync(SelectedEntry.data.id);
+                    new Services.Persistance().AddReadFlagToReadHistoryAsync(SelectedEntry.data.id);
                 }
 
               
@@ -138,7 +136,7 @@ namespace RedditUWPClient.ViewModels
                     //Load ReadHistory and Match it by id
                     try
                     {
-                        HashSet<string> hashIds = await LoadReadHistoryAsync();
+                        HashSet<string> hashIds = await new Services.Persistance().LoadReadHistoryAsync();
                         foreach(var item in ListEntries)
                         {
                             if(hashIds.Contains(item.data.id))
@@ -150,6 +148,31 @@ namespace RedditUWPClient.ViewModels
                     catch (Exception ex)
                     {
                         //Main flow (showing posts is more important thatn persistance of Read posts
+                        //So always go along
+                    }
+
+                    //Remove the Dismissed ones, Match it by id
+                    try
+                    {
+                        HashSet<string> hashIds = await new Services.Persistance().LoadDismissedAsync();
+                        List<Child> ListToRemove = new List<Child>();
+                        foreach (var item in ListEntries)
+                        {
+                            if (hashIds.Contains(item.data.id))
+                            {
+                                ListToRemove.Add(item);
+                            }
+                        }
+
+                        foreach(var item in ListToRemove)
+                        {
+                            ListEntries.Remove(item);
+                        }
+                        
+                    }
+                    catch (Exception ex)
+                    {
+                        //Main flow (showing posts is more important thatn persistance of Dismissed posts
                         //So always go along
                     }
 
@@ -189,47 +212,7 @@ namespace RedditUWPClient.ViewModels
             }
         }
 
-        private async Task AddReadFlagToReadHistoryAsync(string id)
-        {
-            HashSet<string> hashSet = await LoadReadHistoryAsync();
-            if(hashSet == null)
-            {
-                hashSet = new HashSet<string>(); 
-            }
-
-            hashSet.Add(id);
-
-            try
-            {
-                var storage = new Helpers.Storage();
-                storage.WriteTextToFileAsync(ReadHistoryFileNameWithExt, Newtonsoft.Json.JsonConvert.SerializeObject(hashSet));
-            }
-            catch(Exception ex)
-            {
-                var messageDialog = new MessageDialog("Could not persist the History of Read posts." + Environment.NewLine + "Details: " + ex.Message);
-            }
-        }
-
-        private async Task<HashSet<string>> LoadReadHistoryAsync()
-        {
-            HashSet<string> res = null;
-
-            try
-            {
-                var storage = new Helpers.Storage();
-                var resData = await storage.ReadTextFromFileAsync(ReadHistoryFileNameWithExt);
-                if(resData.Success == true)
-                {
-                    res = Newtonsoft.Json.JsonConvert.DeserializeObject<HashSet<string>>(resData.value);
-                }
-            }
-            catch (Exception ex)
-            {
-                //FF: Wont show an error message. by returning null on the next pass it automatically will create a new file
-            }
-
-            return res;
-        }
+      
 
         private void DismissEntry(Models.Data1 entry)
         {
@@ -241,6 +224,7 @@ namespace RedditUWPClient.ViewModels
             if (Child != null)
             {
                 Reddit_Entries.Remove(Child);
+                new Services.Persistance().AddDismissedAsync(Child.data.id);
             }
             
         }
