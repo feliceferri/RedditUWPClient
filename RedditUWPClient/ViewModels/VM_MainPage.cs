@@ -24,10 +24,8 @@ namespace RedditUWPClient.ViewModels
            cmdSaveToGallery = new NoParamCommandAsync(SaveToGallery);
            cmdDismissEntry = new ParamCommand<Models.Data1>(DismissEntry);
            cmdEnlargePicture = new NoParamCommand(EnlargePicture);
-            
-
-
-           LoadEntriesAsync(); //FF: Cant and doesnt need to be awaited as the UI will be notified when the IObservableCollection is filled
+           
+            LoadEntriesAsync(); //FF: Cant and doesnt need to be awaited as the UI will be notified when the IObservableCollection is filled
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -119,7 +117,8 @@ namespace RedditUWPClient.ViewModels
         public NoParamCommandAsync cmdSaveToGallery { get; set; }
         public ParamCommand<Models.Data1> cmdDismissEntry { get; set; }
         public NoParamCommand cmdEnlargePicture { get; set; }
-        
+        public NoParamCommand cmdDismissAll { get; set; }
+
 
 
         #endregion
@@ -232,11 +231,41 @@ namespace RedditUWPClient.ViewModels
             
         }
 
+        internal async Task DismissEntries(List<Child> entries)
+        {
+            if (entries != null)
+            {
+                try
+                {
+                    List<string> IdsToDismiss = new List<string>();
+                    foreach (var entry in entries)
+                    {
+                        IdsToDismiss.Add(entry.data.id);
+                        _Reddit_Entries.Remove(entry);
+                    }
+
+                    new Services.Persistance().AddDismissedAsync(IdsToDismiss);
+                }
+                catch (Exception ex)
+                {
+                    var messageDialog = new MessageDialog("Could not Dismiss all the visible entries." + Environment.NewLine + "Details: " + ex.Message);
+                    await messageDialog.ShowAsync();
+                }
+                
+            }
+            
+
+        }
+
+        
+        
+
         private void EnlargePicture()
         {
             //Show Flyout
             ShowFlyOutImage = true;
             ShowSaveImageButton = true;
         }
+        
     }
 }

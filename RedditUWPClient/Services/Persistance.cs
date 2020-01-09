@@ -30,6 +30,7 @@ namespace RedditUWPClient.Services
             catch (Exception ex)
             {
                 var messageDialog = new MessageDialog("Could not persist the History of Read posts." + Environment.NewLine + "Details: " + ex.Message);
+                await messageDialog.ShowAsync();
             }
         }
 
@@ -56,13 +57,21 @@ namespace RedditUWPClient.Services
 
         internal async Task AddDismissedAsync(string id)
         {
+            await AddDismissedAsync(new List<string>() { id });
+        }
+
+        internal async Task AddDismissedAsync(List<string> Ids)
+        {
             HashSet<string> hashSet = await LoadDismissedAsync();
             if (hashSet == null)
             {
                 hashSet = new HashSet<string>();
             }
 
-            hashSet.Add(id);
+            foreach (string id in Ids)
+            {
+                hashSet.Add(id);
+            }
 
             try
             {
@@ -72,8 +81,10 @@ namespace RedditUWPClient.Services
             catch (Exception ex)
             {
                 var messageDialog = new MessageDialog("Could not persist the Dismiss action." + Environment.NewLine + "Details: " + ex.Message);
+                await messageDialog.ShowAsync();
             }
         }
+       
 
         internal async Task<HashSet<string>> LoadDismissedAsync()
         {

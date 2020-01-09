@@ -26,5 +26,35 @@ namespace RedditUWPClient
         {
             this.InitializeComponent();
         }
+
+
+        private void btnDismissVisibles_Click(object sender, RoutedEventArgs e)
+        {
+            ///FF: This story is exclusively related to the UI, thats why is in the View side
+
+            List<Models.Child> ListToDismiss = new List<Models.Child>();
+
+            foreach (Models.Child item in this.ListView_MainThread.Items)
+            {
+
+                var con = (UIElement)this.ListView_MainThread.ContainerFromItem(item);
+                if (con != null)
+                {
+                    if (con.ActualOffset.Y + con.ActualSize.Y < this.ListView_MainThread.ActualHeight)
+                    {
+                        ListToDismiss.Add(item);
+                    }
+                    else
+                    {
+                        break; //It already passed it
+                    }
+                }
+
+            }
+
+                   ((ViewModels.VM_MainPage)this.DataContext).DismissEntries(ListToDismiss);
+
+        }
+        
     }
 }
