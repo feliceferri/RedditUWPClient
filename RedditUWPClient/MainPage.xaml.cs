@@ -29,46 +29,7 @@ namespace RedditUWPClient
         {
             this.InitializeComponent();
 
-            this.Loaded += MainPage_Loaded;
         }
 
-        private async void MainPage_Loaded(object sender, RoutedEventArgs e)
-        {
-            Reddit reddit = new Reddit();
-            var res = await reddit.GetEntriesAsync();
-
-            if (res.Success == true)
-            {
-                this.ListView_MainThread.ItemsSource = res.value.data.children;
-
-                //foreach (var item in res.value.data.children)
-                //{
-                //    Debug.WriteLine("title: " + item.data.title);
-                //    Debug.WriteLine("Author: " + item.data.author); //subreddit vs subreddit_name_prefixed
-                //    DateTime dt = new DateTime().UnixUTCTimeToLocalDateTime(item.data.created_utc);
-                //    Debug.WriteLine("Entry date:" + dt.ToString() + " Hours ago: " + Math.Floor((DateTime.Now - dt).TotalHours));
-                //    Debug.WriteLine("Comments: " + item.data.num_comments);
-                //    Debug.WriteLine("");
-                //}
-            }
-            else
-            {
-                throw res.Error;
-            }
-
-
-            //var res = SamplingData.RedditEntries;
-            //foreach (var item in res)
-            //{
-            //    Debug.WriteLine("title: " + item.data.title);
-            //    Debug.WriteLine("Author: " + item.data.author); //subreddit vs subreddit_name_prefixed
-            //    DateTime dt = new DateTime().UnixUTCTimeToLocalDateTime(item.data.created_utc);
-            //    Debug.WriteLine("Entry date:" + dt.ToString() + " Hours ago: " + Math.Floor((DateTime.Now - dt).TotalHours));
-            //    Debug.WriteLine("Comments: " + item.data.num_comments);
-            //    Debug.WriteLine("");
-            //}
-
-            //this.ListView_MainThread.ItemsSource = res;
-        }
     }
 }

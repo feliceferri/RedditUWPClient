@@ -5,10 +5,15 @@
     xmlns:local="using:RedditUWPClient"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:xModels="using:RedditUWPClient.Models"
+    xmlns:Models="using:RedditUWPClient.Models"
+    xmlns:ViewModels="using:RedditUWPClient.ViewModels"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    
+    <Page.DataContext>
+        <ViewModels:VM_MainPage/>
+    </Page.DataContext>
+    
     <Grid Background="#DAE0E6">
         <Grid.RowDefinitions>
             <RowDefinition Height="0.12*"></RowDefinition>
@@ -26,14 +31,15 @@
             
         </Grid>
 
-            <ListView x:Name="ListView_MainThread" Grid.Row="2" Grid.Column="1" >
+            <ListView x:Name="ListView_MainThread" Grid.Row="2" Grid.Column="1"
+                     ItemsSource="{Binding Reddit_Entries}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="xModels:Child">
+                    <DataTemplate x:DataType="Models:Child">
                         <Grid Background="White" Margin="0,10,0,0" CornerRadius="3">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="0.2*"></RowDefinition>
