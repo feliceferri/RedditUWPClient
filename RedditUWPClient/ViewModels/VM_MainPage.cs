@@ -17,7 +17,9 @@ namespace RedditUWPClient.ViewModels
 
         public VM_MainPage()
         {
-           Click_CloseFlyOut = new NoParamCommand(CloseFlyOut);
+           cmdCloseFlyOut = new NoParamCommand(CloseFlyOut);
+           cmdSaveToGallery = new NoParamCommandAsync(SaveToGallery);
+                       
            LoadEntriesAsync(); //FF: Cant and doesnt need to be awaited as the UI will be notified when the IObservableCollection is filled
         }
 
@@ -52,6 +54,7 @@ namespace RedditUWPClient.ViewModels
                 {
                     //Show Flyout
                     ShowFlyOutImage = true;
+                    ShowSaveImageButton = true;
                 }
             }
         }
@@ -77,13 +80,25 @@ namespace RedditUWPClient.ViewModels
                 NotifyPropertyChanged();
             }
         }
+
+        bool _ShowSaveImageButton = false;
+        public bool ShowSaveImageButton
+        {
+            get { return _ShowSaveImageButton; }
+            set
+            {
+                _ShowSaveImageButton = value;
+                NotifyPropertyChanged();
+            }
+        }
         #endregion
 
         #region Commands
-        
-        public NoParamCommand Click_CloseFlyOut { get; set; }
-      
-        
+
+        public NoParamCommand cmdCloseFlyOut { get; set; }
+        public NoParamCommandAsync cmdSaveToGallery { get; set; }
+
+
         #endregion
 
         private async Task LoadEntriesAsync()
@@ -120,6 +135,19 @@ namespace RedditUWPClient.ViewModels
             SelectedEntry = null; //FF: So the user can select it again, to see the image for 2nd time
         }
 
-        
+        internal async Task SaveToGallery()
+        {
+            var resPicture = await new Network().GetPictureFromURLAsync(SelectedEntry.data.url);
+            if (resPicture.Success == true)
+            {
+                var resSaving = await new Storage().SavePictureInGalleryAsync(SelectedEntry.data.id + ".jpg", resPicture.value);
+                if (resSaving.Success == true)
+                {
+                    ShowSaveImageButton = false;
+                }
+            }
+        }
+
+
     }
 }

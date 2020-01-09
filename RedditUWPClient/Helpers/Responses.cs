@@ -9,11 +9,20 @@ namespace RedditUWPClient.Helpers
     internal class Responses
     {
 
+        internal class NoParam
+        {
+            public bool Success { get; set; }
+            public Exception Error { get; set; }
+        }
+        
+        
         internal class SingleParam<T>
         {
             public bool Success { get; set; }
             public Exception Error { get; set; }
             public T value { get; set; }
         }
+
+       
     }
 }

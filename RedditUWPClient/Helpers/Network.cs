@@ -30,5 +30,26 @@ namespace RedditUWPClient.Helpers
 
             return res;
         }
+
+        internal async Task<SingleParam<byte[]>> GetPictureFromURLAsync(string URL)
+        {
+            SingleParam<byte[]> res = new SingleParam<byte[]>();
+
+            try
+            {
+                HttpClient httpClient = new HttpClient();
+                byte[] buffer = await httpClient.GetByteArrayAsync(URL);
+                
+                res.value = buffer;
+
+                res.Success = true;
+            }
+            catch (Exception ex)
+            {
+                res.Error = ex;
+            }
+
+            return res;
+        }
     }
 }
