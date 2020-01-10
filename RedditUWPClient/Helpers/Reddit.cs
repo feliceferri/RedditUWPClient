@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,9 +13,17 @@ namespace RedditUWPClient.Helpers
     internal class Reddit
     {
 
+        public enum eKindOfGet
+        {
+            AfterLastEntry,
+            CleanSearchFromTheBeggining
+        }
+
+        static string Last_AfterField = "";
+
         const string Reddit_Top_URL = @"https://www.reddit.com/top.json";
 
-        internal async Task<Responses.SingleParam<Models.Reddit_Entry>> GetEntriesAsync(int NumberOfEntries = 50, string After_Id ="")
+        internal async Task<Responses.SingleParam<Models.Reddit_Entry>> GetEntriesAsync(eKindOfGet kind, int NumberOfEntries = 50)
         {
             var res = new Responses.SingleParam<Models.Reddit_Entry>();
 
@@ -26,9 +35,11 @@ namespace RedditUWPClient.Helpers
                 }
 
                 string URL = Reddit_Top_URL + "?limit=" + NumberOfEntries;
-                if(string.IsNullOrWhiteSpace(After_Id) == false)
+                
+                if(kind == eKindOfGet.AfterLastEntry && string.IsNullOrWhiteSpace(Last_AfterField) == false)
                 {
-                    URL += "&after=" + After_Id;
+                    URL += "&after=" + Last_AfterField;
+                    Debug.WriteLine("Searching after: " + Last_AfterField);
                 }
 
                 Network network = new Network();
@@ -40,6 +51,9 @@ namespace RedditUWPClient.Helpers
                     {
                         Error = HandleDeserializationError
                     });
+
+                    Debug.WriteLine("after: " + res.value.data.after);
+                    Last_AfterField = res.value.data.after;
                     res.Success = true;
                 }
                 else

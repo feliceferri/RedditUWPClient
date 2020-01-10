@@ -19,6 +19,7 @@ namespace RedditUWPClient.ViewModels
         public delegate void EntrySelectedHandler(Models.Child Entry);
         public event EntrySelectedHandler EntrySelected;
 
+        
         public VM_MainPage()
         {
 
@@ -48,6 +49,9 @@ namespace RedditUWPClient.ViewModels
         }
 
 #region Properties
+
+        internal bool LoadingEntries { get; private set; }
+
         static IncrementalLoadingCollectionOfEntries _Reddit_Entries = null;
 
         public IncrementalLoadingCollectionOfEntries Reddit_Entries { 
@@ -138,6 +142,7 @@ namespace RedditUWPClient.ViewModels
 
         private async Task LoadEntriesAsync(List<Child> Entries)
         {
+            LoadingEntries = true;
             try
             {
                 Processing = true;
@@ -145,7 +150,7 @@ namespace RedditUWPClient.ViewModels
                 if (Entries == null || Entries.Count == 0)
                 {
                     Reddit reddit = new Reddit();
-                    var res = await reddit.GetEntriesAsync(10);
+                    var res = await reddit.GetEntriesAsync(Reddit.eKindOfGet.CleanSearchFromTheBeggining, 10);
                     if (res.Success == false)
                     {
                         Reddit_Entries = null;
@@ -163,6 +168,7 @@ namespace RedditUWPClient.ViewModels
                 Reddit_Entries = new IncrementalLoadingCollectionOfEntries(this);
                 foreach(var item in Entries)
                 {
+                    
                     Reddit_Entries.Add(item);
                 }
                 
@@ -175,6 +181,7 @@ namespace RedditUWPClient.ViewModels
             finally
             {
                 Processing = false;
+                LoadingEntries = false; 
             }
         }
 
