@@ -46,7 +46,10 @@
 
                     <Frame x:Name="LeftFrameWhenPanelIsCollapsed" Background="Black" Tapped="LeftFrameWhenPanelIsCollapsed_Tapped"></Frame>
                     
-                    <RefreshContainer Grid.Column="1">
+                    <RefreshContainer x:Name="RefreshContainer_LeftPanel"
+                                      Grid.Column="1"
+                                      RefreshRequested="RefreshContainer_LeftPanel_RefreshRequested"
+                                      PullDirection="TopToBottom">
                         <ListView  x:Name="ListView_MainThread"  
                           DataFetchSize="50"         
                           IncrementalLoadingTrigger="Edge"         

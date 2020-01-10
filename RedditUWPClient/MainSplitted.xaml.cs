@@ -82,7 +82,6 @@ namespace RedditUWPClient
                 _DisplayMode = eDisplayMode.Portrait;
                 MainSplitView.DisplayMode = SplitViewDisplayMode.CompactOverlay;
                 SetPanelState(eSplittedPanelState.Close);
-
             }
             else
             {
@@ -149,6 +148,11 @@ namespace RedditUWPClient
         private void LeftFrameWhenPanelIsCollapsed_Tapped(object sender, TappedRoutedEventArgs e)
         {
             SetPanelState(eSplittedPanelState.Open);
+        }
+
+        private async void RefreshContainer_LeftPanel_RefreshRequested(RefreshContainer sender, RefreshRequestedEventArgs args)
+        {
+            await ((ViewModels.VM_MainPage)this.DataContext).RefreshEntries();
         }
     }
 }

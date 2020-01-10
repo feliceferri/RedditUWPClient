@@ -185,6 +185,12 @@ namespace RedditUWPClient.ViewModels
             }
         }
 
+        internal async Task RefreshEntries()
+        {
+            await LoadEntriesAsync(null);
+        }
+
+
         object Lockobj;
 
         /// <summary>
