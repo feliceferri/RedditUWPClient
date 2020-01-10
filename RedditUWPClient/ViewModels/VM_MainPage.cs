@@ -191,7 +191,7 @@ namespace RedditUWPClient.ViewModels
         }
 
 
-        object Lockobj;
+        object Lockobj = new object();
 
         /// <summary>
         /// If is in the Read History it will tag it as readed
