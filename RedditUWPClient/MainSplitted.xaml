@@ -45,11 +45,13 @@
                     </Grid.ColumnDefinitions>
                     
                     <RefreshContainer Grid.Column="1">
-                    <ListView  x:Name="ListView_MainThread"  
+                        <ListView  x:Name="ListView_MainThread"  
                           Background="Black"
                           ItemsSource="{Binding Reddit_Entries}"
-                        SelectedItem="{Binding SelectedEntry, Mode=TwoWay}" PointerEntered="ListView_MainThread_PointerEntered" PointerExited="ListView_MainThread_PointerExited">
-                        <ListView.ItemContainerStyle>
+                        SelectedItem="{Binding SelectedEntry, Mode=TwoWay}" 
+                          PointerEntered="ListView_MainThread_PointerEntered" PointerExited="ListView_MainThread_PointerExited">
+
+                            <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                             </Style>
@@ -140,7 +142,7 @@
                         </ListView.ItemTemplate>
                     </ListView>
                     </RefreshContainer>
-                    <Button x:Name="btnDismissVisibles" Grid.Row="1" Height="40" Background="Black"
+                    <Button x:Name="btnDismissVisibles" Grid.Row="1" Grid.Column="1" Height="40" Background="Black"
                             Content="Dissmis All" Foreground="{ThemeResource Orange}"  FontSize="16"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             Click="btnDismissVisibles_Click"

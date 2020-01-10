@@ -14,14 +14,15 @@ namespace RedditUWPClient.Helpers
 
         const string Reddit_Top_URL = @"https://www.reddit.com/top.json?limit=50";
 
-        internal async Task<Responses.SingleParam<Models.Reddit_Entry>> GetEntriesAsync()
+        internal async Task<Responses.SingleParam<Models.Reddit_Entry>> GetEntriesAsync(string After_Id ="")
         {
             var res = new Responses.SingleParam<Models.Reddit_Entry>();
 
             try
             {
                 Network network = new Network();
-                var networkResponse = await network.GetJsonPayLoadAsync(Reddit_Top_URL);
+
+                var networkResponse = await network.GetJsonPayLoadAsync(Reddit_Top_URL + (string.IsNullOrWhiteSpace(After_Id) == true ? "": "&after=" + After_Id));
                 if(networkResponse.Success == true)
                 {
                     res.value = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.Reddit_Entry>(networkResponse.value, new JsonSerializerSettings

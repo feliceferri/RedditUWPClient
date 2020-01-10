@@ -145,5 +145,10 @@ namespace RedditUWPClient
                 SetPanelState(eSplittedPanelState.Close);
             }
         }
+
+        private void ListView_MainThread_PointerEntered_1(object sender, PointerRoutedEventArgs e)
+        {
+
+        }
     }
 }
