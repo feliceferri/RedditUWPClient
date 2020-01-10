@@ -134,6 +134,7 @@
     <Compile Include="MainSplitted.xaml.cs">
       <DependentUpon>MainSplitted.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\IncrementalLoadingCollectionOfEntries.cs" />
     <Compile Include="Models\Reddit_Entry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Persistance.cs" />

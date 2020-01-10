@@ -22,7 +22,6 @@ namespace RedditUWPClient.ViewModels
         public VM_MainPage()
         {
 
-           
            cmdCloseFlyOut = new NoParamCommand(CloseFlyOut);
            cmdSaveToGallery = new NoParamCommandAsync(SaveToGallery);
            cmdDismissEntry = new ParamCommand<Models.Data1>(DismissEntry);
@@ -49,9 +48,9 @@ namespace RedditUWPClient.ViewModels
         }
 
 #region Properties
-        static ObservableCollection<Child> _Reddit_Entries = null;
+        static IncrementalLoadingCollectionOfEntries _Reddit_Entries = null;
 
-        public ObservableCollection<Child> Reddit_Entries { 
+        public IncrementalLoadingCollectionOfEntries Reddit_Entries { 
             get {return _Reddit_Entries;}  
             set { _Reddit_Entries = value;
                 NotifyPropertyChanged();
@@ -146,7 +145,7 @@ namespace RedditUWPClient.ViewModels
                 if (Entries == null || Entries.Count == 0)
                 {
                     Reddit reddit = new Reddit();
-                    var res = await reddit.GetEntriesAsync();
+                    var res = await reddit.GetEntriesAsync(10);
                     if (res.Success == false)
                     {
                         Reddit_Entries = null;
@@ -156,55 +155,18 @@ namespace RedditUWPClient.ViewModels
                     Entries = res.value.data.children;
                 }
 
-                
-                   
-
-                    //Load ReadHistory and Match it by id
-                    try
-                    {
-                        HashSet<string> hashIds = await new Services.Persistance().LoadReadHistoryAsync();
-                        foreach(var item in Entries)
-                        {
-                            if(hashIds.Contains(item.data.id))
-                            {
-                                item.data.Read = true;
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        //Main flow (showing posts is more important thatn persistance of Read posts
-                        //So always go along
-                    }
-
-                    //Remove the Dismissed ones, Match it by id
-                    try
-                    {
-                        HashSet<string> hashIds = await new Services.Persistance().LoadDismissedAsync();
-                        List<Child> ListToRemove = new List<Child>();
-                        foreach (var item in Entries)
-                        {
-                            if (hashIds.Contains(item.data.id))
-                            {
-                                ListToRemove.Add(item);
-                            }
-                        }
-
-                        foreach(var item in ListToRemove)
-                        {
-                        Entries.Remove(item);
-                        }
-                        
-                    }
-                    catch (Exception ex)
-                    {
-                        //Main flow (showing posts is more important thatn persistance of Dismissed posts
-                        //So always go along
-                    }
-
+                //To Tag the Read ones, and remove the Dissmissed ones.
+                await FilterEntriesAsync(Entries);
+                    
                     Services.SuspensionManager.PointerTo_ListOfEntries = Entries;
-                    Reddit_Entries = new ObservableCollection<Child>(Entries);
+                //Reddit_Entries = new ObservableCollection<Child>(Entries);
+                Reddit_Entries = new IncrementalLoadingCollectionOfEntries(this);
+                foreach(var item in Entries)
+                {
+                    Reddit_Entries.Add(item);
+                }
                 
+
             }
             catch (Exception ex)
             {
@@ -213,6 +175,65 @@ namespace RedditUWPClient.ViewModels
             finally
             {
                 Processing = false;
+            }
+        }
+
+        object Lockobj;
+
+        /// <summary>
+        /// If is in the Read History it will tag it as readed
+        /// If has been dismissed it wont be shown
+        /// </summary>
+        internal async Task FilterEntriesAsync(List<Child> Entries)
+        {
+            //FF: This Method will be accessed also by the Incremental Loading of the Listview
+            //    Thats why I'm a adding a Lock to avoid two processes altering the Collection at once
+            try
+            {
+                HashSet<string> hashIds = await new Services.Persistance().LoadReadHistoryAsync();
+                lock (Lockobj)
+                {
+                    foreach (var item in Entries)
+                    {
+                        if (hashIds.Contains(item.data.id))
+                        {
+                            item.data.Read = true;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //Main flow (showing posts is more important thatn persistance of Read posts
+                //So always go along
+            }
+
+            //Remove the Dismissed ones, Match it by id
+            try
+            {
+                HashSet<string> hashIds = await new Services.Persistance().LoadDismissedAsync();
+                List<Child> ListToRemove = new List<Child>();
+                foreach (var item in Entries)
+                {
+                    if (hashIds.Contains(item.data.id))
+                    {
+                        ListToRemove.Add(item);
+                    }
+                }
+
+                lock (Lockobj)
+                {
+                    foreach (var item in ListToRemove)
+                    {
+                        Entries.Remove(item);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                //Main flow (showing posts is more important thatn persistance of Dismissed posts
+                //So always go along
             }
         }
 

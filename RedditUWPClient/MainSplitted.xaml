@@ -46,6 +46,9 @@
                     
                     <RefreshContainer Grid.Column="1">
                         <ListView  x:Name="ListView_MainThread"  
+                          DataFetchSize="50"         
+                          IncrementalLoadingTrigger="Edge"         
+                          IncrementalLoadingThreshold="2"
                           Background="Black"
                           ItemsSource="{Binding Reddit_Entries}"
                         SelectedItem="{Binding SelectedEntry, Mode=TwoWay}" 

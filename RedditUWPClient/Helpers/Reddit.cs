@@ -12,17 +12,28 @@ namespace RedditUWPClient.Helpers
     internal class Reddit
     {
 
-        const string Reddit_Top_URL = @"https://www.reddit.com/top.json?limit=50";
+        const string Reddit_Top_URL = @"https://www.reddit.com/top.json";
 
-        internal async Task<Responses.SingleParam<Models.Reddit_Entry>> GetEntriesAsync(string After_Id ="")
+        internal async Task<Responses.SingleParam<Models.Reddit_Entry>> GetEntriesAsync(int NumberOfEntries = 50, string After_Id ="")
         {
             var res = new Responses.SingleParam<Models.Reddit_Entry>();
 
             try
             {
+                if(NumberOfEntries > 50)
+                {
+                    throw new Exception("Reddit API allows max 50 entries for retreival");
+                }
+
+                string URL = Reddit_Top_URL + "?limit=" + NumberOfEntries;
+                if(string.IsNullOrWhiteSpace(After_Id) == false)
+                {
+                    URL += "&after=" + After_Id;
+                }
+
                 Network network = new Network();
 
-                var networkResponse = await network.GetJsonPayLoadAsync(Reddit_Top_URL + (string.IsNullOrWhiteSpace(After_Id) == true ? "": "&after=" + After_Id));
+                var networkResponse = await network.GetJsonPayLoadAsync(URL);
                 if(networkResponse.Success == true)
                 {
                     res.value = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.Reddit_Entry>(networkResponse.value, new JsonSerializerSettings
