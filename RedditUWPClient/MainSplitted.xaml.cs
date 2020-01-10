@@ -43,8 +43,7 @@ namespace RedditUWPClient
         }
 
         private eDisplayMode _DisplayMode;
-        private GridLength _Original_VisibleCol_WhenPanelIsCollapsed;
-
+   
         public MainSplitted()
         {
             this.InitializeComponent();
@@ -59,12 +58,12 @@ namespace RedditUWPClient
             if(state == eSplittedPanelState.Close)
             {
                 MainSplitView.IsPaneOpen = false;
-                _Original_VisibleCol_WhenPanelIsCollapsed = new GridLength(0.2, GridUnitType.Star);  //Wider so user can click it and open the Panel Again
+                VisibleCol_WhenPanelIsCollapsed.Width = new GridLength(0.2, GridUnitType.Star);  //Wider so user can click it and open the Panel Again
             }
             else
             {
                 MainSplitView.IsPaneOpen = true;
-                _Original_VisibleCol_WhenPanelIsCollapsed = new GridLength(0, GridUnitType.Star);
+                VisibleCol_WhenPanelIsCollapsed.Width = new GridLength(0, GridUnitType.Star);
             }
         }
 
@@ -81,7 +80,7 @@ namespace RedditUWPClient
             if (this.ActualHeight > this.ActualWidth)
             {
                 _DisplayMode = eDisplayMode.Portrait;
-                MainSplitView.DisplayMode = SplitViewDisplayMode.CompactInline;
+                MainSplitView.DisplayMode = SplitViewDisplayMode.CompactOverlay;
                 SetPanelState(eSplittedPanelState.Close);
 
             }
@@ -146,9 +145,10 @@ namespace RedditUWPClient
             }
         }
 
-        private void ListView_MainThread_PointerEntered_1(object sender, PointerRoutedEventArgs e)
+      
+        private void LeftFrameWhenPanelIsCollapsed_Tapped(object sender, TappedRoutedEventArgs e)
         {
-
+            SetPanelState(eSplittedPanelState.Open);
         }
     }
 }

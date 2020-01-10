@@ -40,9 +40,11 @@
                         <RowDefinition Height="0.6*"></RowDefinition>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition x:Name="VisibleCol_WhenPanelIsCollapsed" Width="0"></ColumnDefinition>
+                        <ColumnDefinition x:Name="VisibleCol_WhenPanelIsCollapsed" Width="0*"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
+
+                    <Frame x:Name="LeftFrameWhenPanelIsCollapsed" Background="Black" Tapped="LeftFrameWhenPanelIsCollapsed_Tapped"></Frame>
                     
                     <RefreshContainer Grid.Column="1">
                         <ListView  x:Name="ListView_MainThread"  
@@ -241,15 +243,15 @@
                         <Button Grid.RowSpan="3" Grid.ColumnSpan="3" 
                         Background="Transparent" BorderThickness="0" 
                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                        Command="{Binding cmdCloseFlyOut}" >
+                         Command="{Binding cmdCloseFlyOut}" >
                         </Button>
 
                         <Frame Grid.Row="1" Grid.Column="1" Background="White" CornerRadius="10" Opacity="1">
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="1.2*"></RowDefinition>
+                                    <RowDefinition Height="0.8*"></RowDefinition>
                                     <RowDefinition Height="8*"></RowDefinition>
-                                    <RowDefinition Height="2*"></RowDefinition>
+                                    <RowDefinition Height="1.5*"></RowDefinition>
                                 </Grid.RowDefinitions>
 
                                 <Image Grid.RowSpan="3" Source="{Binding SelectedEntry.data.url}"></Image>

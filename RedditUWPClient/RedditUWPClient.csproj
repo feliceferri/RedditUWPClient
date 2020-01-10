@@ -128,9 +128,6 @@
     <Compile Include="Helpers\Reddit.cs" />
     <Compile Include="Helpers\Responses.cs" />
     <Compile Include="Helpers\Storage.cs" />
-    <Compile Include="MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MainSplitted.xaml.cs">
       <DependentUpon>MainSplitted.xaml</DependentUpon>
     </Compile>
@@ -168,10 +165,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="MainSplitted.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
