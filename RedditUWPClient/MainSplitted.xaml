@@ -51,7 +51,7 @@
                                       RefreshRequested="RefreshContainer_LeftPanel_RefreshRequested"
                                       PullDirection="TopToBottom">
                         <ListView  x:Name="ListView_MainThread"  
-                          DataFetchSize="50"         
+                          DataFetchSize="10"         
                           IncrementalLoadingTrigger="Edge"         
                           IncrementalLoadingThreshold="2"
                           Background="Black"
