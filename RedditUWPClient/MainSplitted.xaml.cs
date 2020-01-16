@@ -30,6 +30,7 @@ namespace RedditUWPClient
             Based on that I choose to isolate this code from the modelview, and leave it as part of the the view.
         */
 
+        bool Flag_Skip_LeftFrameWhenPanelIsCollapsed_PointerEntered_Until_PointerIsOutOfLeftNavBar = false;
 
         private enum eDisplayMode
         {
@@ -133,6 +134,7 @@ namespace RedditUWPClient
         {
             if (_DisplayMode == eDisplayMode.Portrait)
             {
+                Flag_Skip_LeftFrameWhenPanelIsCollapsed_PointerEntered_Until_PointerIsOutOfLeftNavBar = true;
                 SetPanelState(eSplittedPanelState.Close);
             }
         }
@@ -142,7 +144,7 @@ namespace RedditUWPClient
         {
             if(_DisplayMode == eDisplayMode.Portrait)
             {
-                SetPanelState(eSplittedPanelState.Open);
+               SetPanelState(eSplittedPanelState.Open);
             }
         }
 
@@ -150,6 +152,7 @@ namespace RedditUWPClient
         {
             if (_DisplayMode == eDisplayMode.Portrait)
             {
+                Flag_Skip_LeftFrameWhenPanelIsCollapsed_PointerEntered_Until_PointerIsOutOfLeftNavBar = false;
                 SetPanelState(eSplittedPanelState.Close);
             }
         }
@@ -164,14 +167,30 @@ namespace RedditUWPClient
               
         private void LeftFrameWhenPanelIsCollapsed_Tapped(object sender, TappedRoutedEventArgs e)
         {
+            Flag_Skip_LeftFrameWhenPanelIsCollapsed_PointerEntered_Until_PointerIsOutOfLeftNavBar = false;
             SetPanelState(eSplittedPanelState.Open);
         }
 
         private void LeftFrameWhenPanelIsCollapsed_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
+            if (Flag_Skip_LeftFrameWhenPanelIsCollapsed_PointerEntered_Until_PointerIsOutOfLeftNavBar == true)
+            {
+                return;
+            }
+
             SetPanelState(eSplittedPanelState.Open);
         }
 
+        private void GridRightContent_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if (_DisplayMode == eDisplayMode.Portrait)
+            {
+                Flag_Skip_LeftFrameWhenPanelIsCollapsed_PointerEntered_Until_PointerIsOutOfLeftNavBar = false;
+                SetPanelState(eSplittedPanelState.Close);
+            }
+        }
         #endregion
+
+
     }
 }

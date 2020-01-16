@@ -185,7 +185,7 @@
                 </Grid>
             </SplitView.Pane>
 
-            <Grid x:Name="GridRightContent" Tapped="GridRightContent_Tapped">
+            <Grid x:Name="GridRightContent" Tapped="GridRightContent_Tapped" PointerEntered="GridRightContent_PointerEntered" >
             
                 <ProgressRing   IsActive="{Binding Processing}">
                 </ProgressRing>
