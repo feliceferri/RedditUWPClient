@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RedditUWPClient.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -50,48 +51,53 @@ namespace RedditUWPClient
 
             this.SizeChanged += MainPage_SizeChanged;
             ((ViewModels.VM_MainPage)this.DataContext).EntrySelected += MainSplitted_EntrySelected;
-
+            
         }
 
-        private void SetPanelState(eSplittedPanelState state)
+        //Pull to Refresh functionality
+        private async void RefreshContainer_LeftPanel_RefreshRequested(RefreshContainer sender, RefreshRequestedEventArgs args)
         {
-            if(state == eSplittedPanelState.Close)
-            {
-                MainSplitView.IsPaneOpen = false;
-                VisibleCol_WhenPanelIsCollapsed.Width = new GridLength(0.2, GridUnitType.Star);  //Wider so user can click it and open the Panel Again
-            }
-            else
-            {
-                MainSplitView.IsPaneOpen = true;
-                VisibleCol_WhenPanelIsCollapsed.Width = new GridLength(0, GridUnitType.Star);
-            }
+            await ((ViewModels.VM_MainPage)this.DataContext).RefreshEntries();
         }
 
-        private void MainSplitted_EntrySelected(Models.Child Entry)
-        {
-            if (_DisplayMode == eDisplayMode.Portrait)
-            {
-                SetPanelState(eSplittedPanelState.Close);
-            }
-        }
-
+        
         private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (this.ActualHeight > this.ActualWidth)
             {
                 _DisplayMode = eDisplayMode.Portrait;
-                MainSplitView.DisplayMode = SplitViewDisplayMode.CompactOverlay;
                 SetPanelState(eSplittedPanelState.Close);
             }
             else
             {
                 _DisplayMode = eDisplayMode.Landscape;
-                MainSplitView.DisplayMode = SplitViewDisplayMode.Inline;
                 SetPanelState(eSplittedPanelState.Open);
-                
             }
         }
 
+        private void SetPanelState(eSplittedPanelState state)
+        {
+            if (_DisplayMode == eDisplayMode.Portrait)
+            {
+                if (state == eSplittedPanelState.Close)
+                {
+                    VisualStateManager.GoToState(this, "Portrait_NavClose", true);
+                    VisibleCol_WhenPanelIsCollapsed.Width = new GridLength(0.2, GridUnitType.Star);  //Wider so user can click it and open the Panel Again
+                }
+                else
+                {
+                    VisualStateManager.GoToState(this, "Portrait_NavOpen", true);
+                    VisibleCol_WhenPanelIsCollapsed.Width = new GridLength(0, GridUnitType.Star);
+                }
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "Landscape", true);
+                VisibleCol_WhenPanelIsCollapsed.Width = new GridLength(0, GridUnitType.Star);
+            }
+        }
+
+        //Calculates how many Reddit Posts are visible so they can be Deleted in a batch
         private void btnDismissVisibles_Click(object sender, RoutedEventArgs e)
         {
             ///FF: This story is exclusively related to the UI, thats why is in the View side
@@ -120,6 +126,18 @@ namespace RedditUWPClient
 
         }
 
+        #region "Hide Show Left Nav Bar depending on Mouse Moves / Tapping etc"
+
+
+        private void MainSplitted_EntrySelected(Models.Child Entry)
+        {
+            if (_DisplayMode == eDisplayMode.Portrait)
+            {
+                SetPanelState(eSplittedPanelState.Close);
+            }
+        }
+
+      
         private void ListView_MainThread_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
             if(_DisplayMode == eDisplayMode.Portrait)
@@ -143,16 +161,17 @@ namespace RedditUWPClient
                 SetPanelState(eSplittedPanelState.Close);
             }
         }
-
-      
+              
         private void LeftFrameWhenPanelIsCollapsed_Tapped(object sender, TappedRoutedEventArgs e)
         {
             SetPanelState(eSplittedPanelState.Open);
         }
 
-        private async void RefreshContainer_LeftPanel_RefreshRequested(RefreshContainer sender, RefreshRequestedEventArgs args)
+        private void LeftFrameWhenPanelIsCollapsed_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            await ((ViewModels.VM_MainPage)this.DataContext).RefreshEntries();
+            SetPanelState(eSplittedPanelState.Open);
         }
+
+        #endregion
     }
 }

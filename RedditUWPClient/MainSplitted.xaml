@@ -29,12 +29,37 @@
     
 
     <Grid Background="#DAE0E6">
+        
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Portrait_NavClose">
+                    <VisualState.Setters>
+                        <Setter Target="MainSplitView.DisplayMode" Value="CompactOverlay"></Setter>
+                        <Setter Target="MainSplitView.IsPaneOpen" Value="false"></Setter>
+                     </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Portrait_NavOpen">
+                    <VisualState.Setters>
+                        <Setter Target="MainSplitView.DisplayMode" Value="CompactOverlay"></Setter>
+                        <Setter Target="MainSplitView.IsPaneOpen" Value="true"></Setter>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Landscape">
+                    <VisualState.Setters>
+                        <Setter Target="MainSplitView.DisplayMode" Value="Inline"></Setter>
+                        <Setter Target="MainSplitView.IsPaneOpen" Value="true"></Setter>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        
         <SplitView x:Name="MainSplitView" IsPaneOpen="True" 
            DisplayMode="Inline"
            OpenPaneLength="400">
 
             <SplitView.Pane>
-                <Grid>
+                <Grid x:Name="GridNav">
+                    
                     <Grid.RowDefinitions >
                         <RowDefinition Height="10*"></RowDefinition>
                         <RowDefinition Height="0.6*"></RowDefinition>
@@ -44,7 +69,9 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
-                    <Frame x:Name="LeftFrameWhenPanelIsCollapsed" Background="Black" Tapped="LeftFrameWhenPanelIsCollapsed_Tapped"></Frame>
+                    <Frame x:Name="LeftFrameWhenPanelIsCollapsed" Background="Black" 
+                           Tapped="LeftFrameWhenPanelIsCollapsed_Tapped"
+                           PointerEntered="LeftFrameWhenPanelIsCollapsed_PointerEntered"></Frame>
                     
                     <RefreshContainer x:Name="RefreshContainer_LeftPanel"
                                       Grid.Column="1"
