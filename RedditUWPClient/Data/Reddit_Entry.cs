@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RedditUWPClient.Models
+namespace RedditUWPClient.Data
 {
 
     public class Reddit_Entry 
@@ -300,17 +300,17 @@ namespace RedditUWPClient.Models
 public class SamplingData
 {
 
-    public static ObservableCollection<RedditUWPClient.Models.Child> RedditEntries
+    public static ObservableCollection<RedditUWPClient.Data.Child> RedditEntries
     {
         get
         {
-            return new ObservableCollection<RedditUWPClient.Models.Child>()
+            return new ObservableCollection<RedditUWPClient.Data.Child>()
                 {
-                    new RedditUWPClient.Models.Child { data = new RedditUWPClient.Models.Data1 { title = "Title1", author = "Author1", created_utc = 1578528573, num_comments = 1 } },
-                    new RedditUWPClient.Models.Child { data = new RedditUWPClient.Models.Data1 { title = "Title2", author = "Author2", created_utc = 1578528573, num_comments = 2 } },
-                    new RedditUWPClient.Models.Child { data = new RedditUWPClient.Models.Data1 { title = "Title3", author = "Author3", created_utc = 1578528573, num_comments = 3 } },
-                    new RedditUWPClient.Models.Child { data = new RedditUWPClient.Models.Data1 { title = "Title4", author = "Author4", created_utc = 1578528573, num_comments = 4 } },
-                    new RedditUWPClient.Models.Child { data = new RedditUWPClient.Models.Data1 { title = "Title5", author = "Author5", created_utc = 1578528573, num_comments = 5 } },
+                    new RedditUWPClient.Data.Child { data = new RedditUWPClient.Data.Data1 { title = "Title1", author = "Author1", created_utc = 1578528573, num_comments = 1 } },
+                    new RedditUWPClient.Data.Child { data = new RedditUWPClient.Data.Data1 { title = "Title2", author = "Author2", created_utc = 1578528573, num_comments = 2 } },
+                    new RedditUWPClient.Data.Child { data = new RedditUWPClient.Data.Data1 { title = "Title3", author = "Author3", created_utc = 1578528573, num_comments = 3 } },
+                    new RedditUWPClient.Data.Child { data = new RedditUWPClient.Data.Data1 { title = "Title4", author = "Author4", created_utc = 1578528573, num_comments = 4 } },
+                    new RedditUWPClient.Data.Child { data = new RedditUWPClient.Data.Data1 { title = "Title5", author = "Author5", created_utc = 1578528573, num_comments = 5 } },
                 };
         }
 

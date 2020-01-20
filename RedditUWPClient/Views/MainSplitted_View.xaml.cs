@@ -51,14 +51,76 @@ namespace RedditUWPClient
             this.InitializeComponent();
 
             this.SizeChanged += MainPage_SizeChanged;
-            ((ViewModels.VM_MainPage)this.DataContext).EntrySelected += MainSplitted_EntrySelected;
-            
+            ViewModels.MainSplitted_ViewModel VM = ((ViewModels.MainSplitted_ViewModel)this.DataContext);
+
+            //*******************************************************
+            //"Hide Show Left Nav Bar depending on Mouse Moves / Tapping etc"
+            //*******************************************************
+            VM.EntrySelected += delegate
+            {
+                if (_DisplayMode == eDisplayMode.Portrait)
+                {
+                    Flag_Skip_LeftFrameWhenPanelIsCollapsed_PointerEntered_Until_PointerIsOutOfLeftNavBar = true;
+                    SetPanelState(eSplittedPanelState.Close);
+                }
+            };
+
+            this.ListView_MainThread.PointerEntered += delegate{if (_DisplayMode == eDisplayMode.Portrait) SetPanelState(eSplittedPanelState.Open);};
+            this.ListView_MainThread.PointerExited += delegate { if (_DisplayMode == eDisplayMode.Portrait) SetPanelState(eSplittedPanelState.Close); };
+
+            ////GridRightContent is the Right Side of the SplitView where the Entry Detail is being rendered
+            this.GridRightContent.Tapped += delegate {
+                if (_DisplayMode == eDisplayMode.Portrait)
+                {
+                    Flag_Skip_LeftFrameWhenPanelIsCollapsed_PointerEntered_Until_PointerIsOutOfLeftNavBar = false;
+                    SetPanelState(eSplittedPanelState.Close);
+                }
+            };
+
+            this.GridRightContent.PointerEntered += delegate {
+                if (_DisplayMode == eDisplayMode.Portrait)
+                {
+                    Flag_Skip_LeftFrameWhenPanelIsCollapsed_PointerEntered_Until_PointerIsOutOfLeftNavBar = false;
+                    SetPanelState(eSplittedPanelState.Close);
+                }
+            };
+            ///////////////////////////////////////////////////////////////////
+
+
+            //LEFT Frame; is the black collapsed bar that reamins at the left when the SplitView Left Pane is collapsed
+            this.LeftFrameWhenPanelIsCollapsed.Tapped += delegate {
+                  Flag_Skip_LeftFrameWhenPanelIsCollapsed_PointerEntered_Until_PointerIsOutOfLeftNavBar = false;
+                  SetPanelState(eSplittedPanelState.Open);
+            };
+
+            this.LeftFrameWhenPanelIsCollapsed.PointerEntered += delegate {
+                if (Flag_Skip_LeftFrameWhenPanelIsCollapsed_PointerEntered_Until_PointerIsOutOfLeftNavBar == true)
+                {
+                    return;
+                }
+
+                SetPanelState(eSplittedPanelState.Open);
+            };
+
+            this.LeftFrameWhenPanelIsCollapsed.PointerExited += delegate {
+                if (Flag_Skip_LeftFrameWhenPanelIsCollapsed_PointerEntered_Until_PointerIsOutOfLeftNavBar == true)
+                {
+                    return;
+                }
+
+                SetPanelState(eSplittedPanelState.Open);
+            };
+            ///////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////
+
         }
+
+
 
         //Pull to Refresh functionality
         private async void RefreshContainer_LeftPanel_RefreshRequested(RefreshContainer sender, RefreshRequestedEventArgs args)
         {
-            await ((ViewModels.VM_MainPage)this.DataContext).RefreshEntries();
+            await ((ViewModels.MainSplitted_ViewModel)this.DataContext).RefreshEntriesAsync();
         }
 
         
@@ -101,11 +163,11 @@ namespace RedditUWPClient
         //Calculates how many Reddit Posts are visible so they can be Deleted in a batch
         private void btnDismissVisibles_Click(object sender, RoutedEventArgs e)
         {
-            ///FF: This story is exclusively related to the UI, thats why is in the View side
+            ///FF: This story is exclusively related to the ListView Control in the UI, thats why is in the View side
 
-            List<Models.Child> ListToDismiss = new List<Models.Child>();
+            List<Data.Child> ListToDismiss = new List<Data.Child>();
 
-            foreach (Models.Child item in this.ListView_MainThread.Items)
+            foreach (Data.Child item in this.ListView_MainThread.Items)
             {
 
                 var con = (UIElement)this.ListView_MainThread.ContainerFromItem(item);
@@ -123,73 +185,11 @@ namespace RedditUWPClient
 
             }
 
-                   ((ViewModels.VM_MainPage)this.DataContext).DismissEntries(ListToDismiss);
+                   ((ViewModels.MainSplitted_ViewModel)this.DataContext).DismissEntriesAsync(ListToDismiss);
 
-        }
-
-        #region "Hide Show Left Nav Bar depending on Mouse Moves / Tapping etc"
-
-
-        private void MainSplitted_EntrySelected(Models.Child Entry)
-        {
-            if (_DisplayMode == eDisplayMode.Portrait)
-            {
-                Flag_Skip_LeftFrameWhenPanelIsCollapsed_PointerEntered_Until_PointerIsOutOfLeftNavBar = true;
-                SetPanelState(eSplittedPanelState.Close);
-            }
         }
 
       
-        private void ListView_MainThread_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            if(_DisplayMode == eDisplayMode.Portrait)
-            {
-               SetPanelState(eSplittedPanelState.Open);
-            }
-        }
-
-        private void GridRightContent_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (_DisplayMode == eDisplayMode.Portrait)
-            {
-                Flag_Skip_LeftFrameWhenPanelIsCollapsed_PointerEntered_Until_PointerIsOutOfLeftNavBar = false;
-                SetPanelState(eSplittedPanelState.Close);
-            }
-        }
-
-        private void ListView_MainThread_PointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            if (_DisplayMode == eDisplayMode.Portrait)
-            {
-                SetPanelState(eSplittedPanelState.Close);
-            }
-        }
-              
-        private void LeftFrameWhenPanelIsCollapsed_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            Flag_Skip_LeftFrameWhenPanelIsCollapsed_PointerEntered_Until_PointerIsOutOfLeftNavBar = false;
-            SetPanelState(eSplittedPanelState.Open);
-        }
-
-        private void LeftFrameWhenPanelIsCollapsed_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            if (Flag_Skip_LeftFrameWhenPanelIsCollapsed_PointerEntered_Until_PointerIsOutOfLeftNavBar == true)
-            {
-                return;
-            }
-
-            SetPanelState(eSplittedPanelState.Open);
-        }
-
-        private void GridRightContent_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            if (_DisplayMode == eDisplayMode.Portrait)
-            {
-                Flag_Skip_LeftFrameWhenPanelIsCollapsed_PointerEntered_Until_PointerIsOutOfLeftNavBar = false;
-                SetPanelState(eSplittedPanelState.Close);
-            }
-        }
-        #endregion
 
 
     }

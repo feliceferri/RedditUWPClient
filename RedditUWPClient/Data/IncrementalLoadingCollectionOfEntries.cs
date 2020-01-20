@@ -11,19 +11,19 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Xaml.Data;
 
-namespace RedditUWPClient.Models
+namespace RedditUWPClient.Data
 {
-    internal class IncrementalLoadingCollectionOfEntries : ObservableCollection<Models.Child>, ISupportIncrementalLoading
+    internal class IncrementalLoadingCollectionOfEntries : ObservableCollection<Child>, ISupportIncrementalLoading
     {
 
         Reddit _reddit = null;
-        ViewModels.VM_MainPage _vm_MainPage;
+        Models.MainSplitted_Model _mainSplittedModel;
 
         private bool _LoadingEntries = false;
 
-        public IncrementalLoadingCollectionOfEntries(ViewModels.VM_MainPage vm_MainPage)
+        public IncrementalLoadingCollectionOfEntries(Models.MainSplitted_Model mainSplittedModel)
         {
-            _vm_MainPage = vm_MainPage;
+            _mainSplittedModel = mainSplittedModel;
             _reddit = new Reddit();
         }
         
@@ -31,7 +31,7 @@ namespace RedditUWPClient.Models
         {
             return AsyncInfo.Run(async cancelToken =>
             {
-                if(_vm_MainPage.LoadingEntries == true || _LoadingEntries == true)
+                if(_mainSplittedModel.LoadingEntries == true || _LoadingEntries == true)
                 {
                     return new LoadMoreItemsResult { Count = 0 };
                 }
@@ -56,7 +56,7 @@ namespace RedditUWPClient.Models
                 
                 if (res.Success == true)
                 {
-                    await _vm_MainPage.FilterEntriesAsync(res.value.data.children);
+                    await _mainSplittedModel.FilterEntriesAsync(res.value.data.children);
 
                     foreach(var item in res.value.data.children)
                     {

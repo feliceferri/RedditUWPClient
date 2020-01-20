@@ -55,7 +55,7 @@ namespace RedditUWPClient.Services
             await AddDismissedAsync(new List<string>() { id });
         }
 
-        internal async Task AddDismissedAsync(List<string> Ids)
+        internal async Task<bool> AddDismissedAsync(List<string> Ids)
         {
             HashSet<string> hashSet = await LoadDismissedAsync();
             if (hashSet == null)
@@ -69,14 +69,15 @@ namespace RedditUWPClient.Services
             }
 
             var res = await SaveJsonAsync<HashSet<string>>(DissmissedFileNameWithExt, hashSet);
-            if (res.Success == false)
-            {
-                var messageDialog = new MessageDialog("Could not persist the Dismiss action." + Environment.NewLine + "Details: " + res.Error.Message);
-                await messageDialog.ShowAsync();
+
+            return res.Success;
+           
+            //var messageDialog = new MessageDialog("Could not persist the Dismiss action." + Environment.NewLine + "Details: " + res.Error.Message);
+           //await messageDialog.ShowAsync();
+           
             }
 
-            }
-       
+          
 
         internal async Task<HashSet<string>> LoadDismissedAsync()
         {

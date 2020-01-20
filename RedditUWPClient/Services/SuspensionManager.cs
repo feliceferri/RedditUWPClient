@@ -10,16 +10,16 @@ namespace RedditUWPClient.Services
 
     public class SuspensionState
     {
-        public List<Models.Child> Entries { get; set; }
-        public Models.Child SelectedEntry { get; set; }
+        public List<Data.Child> Entries { get; set; }
+        public Data.Child SelectedEntry { get; set; }
     }
 
     static internal class SuspensionManager
     {
         private const string SuspensionStateFileNameWithExt = "SuspensionState.txt";
 
-        static internal List<Models.Child> PointerTo_ListOfEntries;
-        static internal Models.Child PointerTo_SelectedEntry;
+        static internal List<Data.Child> PointerTo_ListOfEntries;
+        static internal Data.Child PointerTo_SelectedEntry;
 
         static internal async Task LoadState()
         {

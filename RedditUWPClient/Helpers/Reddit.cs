@@ -23,9 +23,9 @@ namespace RedditUWPClient.Helpers
 
         const string Reddit_Top_URL = @"https://www.reddit.com/top.json";
 
-        internal async Task<Responses.SingleParam<Models.Reddit_Entry>> GetEntriesAsync(eKindOfGet kind, int NumberOfEntries = 50)
+        internal async Task<Responses.SingleParam<Data.Reddit_Entry>> GetEntriesAsync(eKindOfGet kind, int NumberOfEntries = 50)
         {
-            var res = new Responses.SingleParam<Models.Reddit_Entry>();
+            var res = new Responses.SingleParam<Data.Reddit_Entry>();
 
             try
             {
@@ -47,7 +47,7 @@ namespace RedditUWPClient.Helpers
                 var networkResponse = await network.GetJsonPayLoadAsync(URL);
                 if(networkResponse.Success == true)
                 {
-                    res.value = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.Reddit_Entry>(networkResponse.value, new JsonSerializerSettings
+                    res.value = Newtonsoft.Json.JsonConvert.DeserializeObject<Data.Reddit_Entry>(networkResponse.value, new JsonSerializerSettings
                     {
                         Error = HandleDeserializationError
                     });
