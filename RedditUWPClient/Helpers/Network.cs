@@ -43,10 +43,10 @@ namespace RedditUWPClient.Helpers
             try
             {
 
-                using (HttpResponseMessage responseMessage = await _httpClient.GetAsync(URL))
+                using (HttpResponseMessage responseMessage = await _httpClient.GetAsync(URL).ConfigureAwait(false))
                 {
                     responseMessage.EnsureSuccessStatusCode();
-                    res.value = await responseMessage.Content.ReadAsStringAsync();
+                    res.value = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                     res.Success = true;
                 }
@@ -65,7 +65,7 @@ namespace RedditUWPClient.Helpers
 
             try
             {
-                byte[] buffer = await _httpClient.GetByteArrayAsync(URL);
+                byte[] buffer = await _httpClient.GetByteArrayAsync(URL).ConfigureAwait(false);
                 
                 res.value = buffer;
 

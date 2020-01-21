@@ -164,16 +164,18 @@ namespace RedditUWPClient.Models
 
         internal async Task<bool> SaveToGallery(Child SelectedEntry)
         {
-            var resPicture = await new Network().GetPictureFromURLAsync(SelectedEntry.data.url);
-            if (resPicture.Success == true)
+            using (var network = new Network())
             {
-                var resSaving = await new Storage().SavePictureInGalleryAsync(SelectedEntry.data.id + ".jpg", resPicture.value);
-                if (resSaving.Success == true)
+                var resPicture = await network.GetPictureFromURLAsync(SelectedEntry.data.url);
+                if (resPicture.Success == true)
                 {
-                    return true; 
+                    var resSaving = await new Storage().SavePictureInGalleryAsync(SelectedEntry.data.id + ".jpg", resPicture.value);
+                    if (resSaving.Success == true)
+                    {
+                        return true;
+                    }
                 }
             }
-
             return false;
         }
 

@@ -24,11 +24,11 @@ namespace RedditUWPClient.Helpers
                 {
                    IRandomAccessStream imageStream = memoryStream.AsRandomAccessStream();
 
-                    StorageFile destinationFile = await KnownFolders.SavedPictures.CreateFileAsync(fileName,CreationCollisionOption.ReplaceExisting);
+                    StorageFile destinationFile = await KnownFolders.SavedPictures.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting).AsTask().ConfigureAwait(false);
                    
-                        using (var destinationStream = (await destinationFile.OpenAsync(FileAccessMode.ReadWrite)).GetOutputStreamAt(0))
+                        using (var destinationStream = (await destinationFile.OpenAsync(FileAccessMode.ReadWrite).AsTask().ConfigureAwait(false)).GetOutputStreamAt(0))
                         {
-                            await RandomAccessStream.CopyAndCloseAsync(imageStream, destinationStream);
+                            await RandomAccessStream.CopyAndCloseAsync(imageStream, destinationStream).AsTask().ConfigureAwait(false);
                         }
                     
                 }
@@ -57,8 +57,8 @@ namespace RedditUWPClient.Helpers
                 Windows.Storage.StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
 
                 StorageFile file = await localFolder.CreateFileAsync(fileNameWithExtension,
-                    CreationCollisionOption.ReplaceExisting);
-                await FileIO.WriteTextAsync(file, data);
+                    CreationCollisionOption.ReplaceExisting).AsTask().ConfigureAwait(false);
+                await FileIO.WriteTextAsync(file, data).AsTask().ConfigureAwait(false);
                 res.Success = true;
             }
             catch(Exception ex)
@@ -75,8 +75,8 @@ namespace RedditUWPClient.Helpers
             {
                 Windows.Storage.StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
 
-                StorageFile file = await localFolder.GetFileAsync(fileNameWithExtension);
-                res.value = await FileIO.ReadTextAsync(file);
+                StorageFile file = await localFolder.GetFileAsync(fileNameWithExtension).AsTask().ConfigureAwait(false);
+                res.value = await FileIO.ReadTextAsync(file).AsTask().ConfigureAwait(false);
                 res.Success = true;
             }
             catch (Exception ex)

@@ -12,9 +12,10 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     x:Name="ThisPage">
 
-    <Page.DataContext>
+    <!--<Page.DataContext>
         <ViewModels:MainSplitted_ViewModel/>
-    </Page.DataContext>
+    </Page.DataContext>-->
+    
     <Page.Resources>
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></Converters:BooleanToVisibilityConverter>
         <Converters:IsNullToVisibilityConverter x:Key="IsNullToVisibilityConverter"></Converters:IsNullToVisibilityConverter>
@@ -80,7 +81,7 @@
                           IncrementalLoadingTrigger="Edge"         
                           IncrementalLoadingThreshold="2"
                           Background="Black"
-                          ItemsSource="{Binding Reddit_Entries}"
+                          ItemsSource="{x:Bind Path=ViewModel.Reddit_Entries}"
                         SelectedItem="{Binding SelectedEntry, Mode=TwoWay}">
 
                             <ListView.ItemContainerStyle>
@@ -116,26 +117,26 @@
 
                                         <TextBlock Grid.Column="2" Grid.ColumnSpan="2" 
                                                TextTrimming="CharacterEllipsis"
-                                               Foreground="{Binding data.Read, Converter={StaticResource BooleanPostReadToForegroundColorBrush}}" 
+                                               Foreground="{x:Bind data.Read, Converter={StaticResource BooleanPostReadToForegroundColorBrush}}" 
                                                FontSize="16" Margin="0,10,0,0">
-                                <Run Text="{Binding data.author}"></Run>
-                                <Run Text="{Binding data.TimeAgo}" FontSize="12"></Run>
+                                <Run Text="{x:Bind data.author}"></Run>
+                                <Run Text="{x:Bind data.TimeAgo}" FontSize="12"></Run>
                                         </TextBlock>
 
                                             <Image  Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,5,10,5" HorizontalAlignment="Left"
-                                                    Source="{Binding data.url}" >
+                                                    Source="{x:Bind data.url}" >
                                             </Image>
                                             <!--FF: Forbidden Access to Thumbnails Source="{Binding data.preview.images[0].resolutions[1].url}" >-->
 
-                                           
 
 
-                                            <TextBlock Grid.Row="2" Grid.Column="3"  Text="{Binding data.title}"
+
+                                            <TextBlock Grid.Row="2" Grid.Column="3"  Text="{x:Bind data.title}"
                                    Margin="0,10,0,0"
                                    TextWrapping="WrapWholeWords"
                                    FontSize="14"
                                    TextTrimming="CharacterEllipsis"
-                                   Foreground="{Binding data.Read, Converter={StaticResource BooleanPostReadToForegroundColorBrush}}" 
+                                   Foreground="{x:Bind data.Read, Converter={StaticResource BooleanPostReadToForegroundColorBrush}}" 
                                                ></TextBlock>
 
                                         <Grid Grid.Row="4" Grid.ColumnSpan="4" >
@@ -158,7 +159,7 @@
 
                                             <TextBlock Grid.Column="1" Foreground="{ThemeResource Orange}" 
                                         FontSize="14" VerticalAlignment="Center">
-                                        <Run Text="{Binding data.Comments}"></Run>
+                                        <Run Text="{x:Bind data.Comments}"></Run>
                                             </TextBlock>
                                         </Grid>
 
@@ -178,7 +179,7 @@
                             Content="Dissmis All" Foreground="{ThemeResource Orange}"  FontSize="16"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             Click="btnDismissVisibles_Click"
-                            Visibility="{Binding Reddit_Entries, Converter={StaticResource IsNullToVisibilityConverter}}"></Button>
+                            Visibility="{x:Bind Path=ViewModel.Reddit_Entries, Converter={StaticResource IsNullToVisibilityConverter}}"></Button>
                 </Grid>
             </SplitView.Pane>
 
@@ -220,7 +221,7 @@
 
                     <TextBlock Grid.Row="1" Grid.Column="2" Foreground="Gray" FontSize="18" Margin="0,10,0,0" TextTrimming="CharacterEllipsis">
                             <Run Text="Posted by"></Run>
-                            <Run Text="{Binding data.author}"></Run>
+                            <Run Text="{Binding  Path=SelectedEntry.data.author}"></Run>
                             <Run Text="{Binding data.TimeAgo}"></Run>
                     </TextBlock>
                     <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding data.title}"

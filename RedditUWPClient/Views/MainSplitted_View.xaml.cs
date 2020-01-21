@@ -45,18 +45,22 @@ namespace RedditUWPClient
         }
 
         private eDisplayMode _DisplayMode;
-   
+
+        internal ViewModels.MainSplitted_ViewModel ViewModel { get; set; }
+
         public MainSplitted()
         {
             this.InitializeComponent();
 
             this.SizeChanged += MainPage_SizeChanged;
-            ViewModels.MainSplitted_ViewModel VM = ((ViewModels.MainSplitted_ViewModel)this.DataContext);
+
+            this.ViewModel = new ViewModels.MainSplitted_ViewModel();
+            this.DataContext = this.ViewModel;
 
             //*******************************************************
             //"Hide Show Left Nav Bar depending on Mouse Moves / Tapping etc"
             //*******************************************************
-            VM.EntrySelected += delegate
+            this.ViewModel.EntrySelected += delegate
             {
                 if (_DisplayMode == eDisplayMode.Portrait)
                 {

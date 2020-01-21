@@ -42,23 +42,24 @@ namespace RedditUWPClient.Helpers
                     Debug.WriteLine("Searching after: " + Last_AfterField);
                 }
 
-                Network network = new Network();
-
-                var networkResponse = await network.GetJsonPayLoadAsync(URL);
-                if(networkResponse.Success == true)
+                using (Network network = new Network())
                 {
-                    res.value = Newtonsoft.Json.JsonConvert.DeserializeObject<Data.Reddit_Entry>(networkResponse.value, new JsonSerializerSettings
+                    var networkResponse = await network.GetJsonPayLoadAsync(URL).ConfigureAwait(false);
+                    if (networkResponse.Success == true)
                     {
-                        Error = HandleDeserializationError
-                    });
+                        res.value = Newtonsoft.Json.JsonConvert.DeserializeObject<Data.Reddit_Entry>(networkResponse.value, new JsonSerializerSettings
+                        {
+                            Error = HandleDeserializationError
+                        });
 
-                    Debug.WriteLine("after: " + res.value.data.after);
-                    Last_AfterField = res.value.data.after;
-                    res.Success = true;
-                }
-                else
-                {
-                    res.Error = networkResponse.Error;
+                        Debug.WriteLine("after: " + res.value.data.after);
+                        Last_AfterField = res.value.data.after;
+                        res.Success = true;
+                    }
+                    else
+                    {
+                        res.Error = networkResponse.Error;
+                    }
                 }
                 
             }   
