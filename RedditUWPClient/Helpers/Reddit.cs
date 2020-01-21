@@ -75,7 +75,7 @@ namespace RedditUWPClient.Helpers
             var currentError = errorArgs.ErrorContext.Error.Message;
             errorArgs.ErrorContext.Handled = true;
 #if DEBUG
-            var x = 12;
+           
             //FF: This is a breakpoint that will be fired only in Debug mode to notify that something changed in the Json payload
             //in terms of schema.
             //Happen to me once, some int image fields were suppose to be nullable and found it out in the 2nd day of work

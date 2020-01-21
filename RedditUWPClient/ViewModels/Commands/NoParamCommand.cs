@@ -16,7 +16,9 @@ namespace RedditUWPClient.ViewModels.Commands
             _action = action;
         }
 
-        public event EventHandler CanExecuteChanged;
+#pragma warning disable
+        public event EventHandler CanExecuteChanged; //Is part of the interface
+#pragma warning restore
 
         public bool CanExecute(object parameter)
         {

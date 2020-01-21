@@ -8,20 +8,48 @@ using static RedditUWPClient.Helpers.Responses;
 
 namespace RedditUWPClient.Helpers
 {
-    internal class Network
+    internal class Network: IDisposable
     {
+        bool disposed = false;
+        private readonly HttpClient _httpClient = null;
+
+        public Network()
+        {
+            _httpClient = new HttpClient();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                _httpClient.Dispose(); //HttpClient
+             }
+
+            disposed = true;
+        }
+
         internal async Task<SingleParam<string>> GetJsonPayLoadAsync(string URL)
         {
             SingleParam<string> res = new SingleParam<string>();
 
             try
             {
-                HttpClient httpClient = new HttpClient();
-                HttpResponseMessage  responseMessage= await httpClient.GetAsync(URL);
-                responseMessage.EnsureSuccessStatusCode();
-                res.value = await responseMessage.Content.ReadAsStringAsync();
 
-                res.Success = true;
+                using (HttpResponseMessage responseMessage = await _httpClient.GetAsync(URL))
+                {
+                    responseMessage.EnsureSuccessStatusCode();
+                    res.value = await responseMessage.Content.ReadAsStringAsync();
+
+                    res.Success = true;
+                }
             }
             catch(Exception ex)
             {
@@ -37,8 +65,7 @@ namespace RedditUWPClient.Helpers
 
             try
             {
-                HttpClient httpClient = new HttpClient();
-                byte[] buffer = await httpClient.GetByteArrayAsync(URL);
+                byte[] buffer = await _httpClient.GetByteArrayAsync(URL);
                 
                 res.value = buffer;
 

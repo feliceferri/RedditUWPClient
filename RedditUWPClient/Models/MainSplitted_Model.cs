@@ -48,7 +48,7 @@ namespace RedditUWPClient.Models
 
 
             }
-            catch (Exception ex)
+            catch
             {
                 Response_Entries = null;
             }
@@ -84,7 +84,7 @@ namespace RedditUWPClient.Models
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 //Main flow (showing posts is more important thatn persistance of Read posts
                 //So always go along
@@ -112,7 +112,7 @@ namespace RedditUWPClient.Models
                 }
 
             }
-            catch (Exception ex)
+            catch
             {
                 //Main flow (showing posts is more important thatn persistance of Dismissed posts
                 //So always go along
@@ -149,7 +149,7 @@ namespace RedditUWPClient.Models
                         Reddit_Entries.Remove(entry);
                     }
 
-                    new Services.Persistance().AddDismissedAsync(IdsToDismiss);
+                    await new Services.Persistance().AddDismissedAsync(IdsToDismiss);
                 }
                 catch (Exception ex)
                 {

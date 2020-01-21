@@ -76,7 +76,7 @@ namespace RedditUWPClient.ViewModels
                     SelectedEntry.data.Read = true;
                     OnEntrySelected(SelectedEntry);
                     Services.SuspensionManager.PointerTo_SelectedEntry = _SelectedEntry;
-                    new Services.Persistance().AddReadFlagToReadHistoryAsync(SelectedEntry.data.id);
+                    Task.Run(async () => { await new Services.Persistance().AddReadFlagToReadHistoryAsync(SelectedEntry.data.id); }).Wait();
                 }
 
 

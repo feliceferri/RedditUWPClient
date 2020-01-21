@@ -161,7 +161,7 @@ namespace RedditUWPClient
         }
 
         //Calculates how many Reddit Posts are visible so they can be Deleted in a batch
-        private void btnDismissVisibles_Click(object sender, RoutedEventArgs e)
+        private async void btnDismissVisibles_Click(object sender, RoutedEventArgs e)
         {
             ///FF: This story is exclusively related to the ListView Control in the UI, thats why is in the View side
 
@@ -185,7 +185,7 @@ namespace RedditUWPClient
 
             }
 
-                   ((ViewModels.MainSplitted_ViewModel)this.DataContext).DismissEntriesAsync(ListToDismiss);
+                   await ((ViewModels.MainSplitted_ViewModel)this.DataContext).DismissEntriesAsync(ListToDismiss);
 
         }
 
