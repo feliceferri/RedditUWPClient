@@ -10,6 +10,7 @@ ViewStates - Adaptative UI<br />
 SplitView<br />
 ListView Pull Down to Refresh<br />
 ListView Infinite Scroll - Automatic Pagination<br />
+Flyouts<br />
 Consuming Reddit API as Json Payload<br />
 Extension Methods<br />
 Persistance into hard drive<br />
