@@ -1,4 +1,4 @@
-This project was created as part of a recruitment process for one of the big fours in Tech.
+This project was created as part of a recruitment process.
 <br />
 <br />
 It demostrate different concepts in UWP like:
