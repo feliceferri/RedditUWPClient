@@ -4,7 +4,7 @@ This project was created as part of a recruitment process.
 It demostrates different concepts in UWP like:
 <br />
 <br />
-MVVM - Bidings (Both x:Bind & Databind)<br />
+MVVM - XAML Bidings (Both x:Bind & Databind)<br />
 XAML Converters<br />
 ViewStates - Adaptative UI<br />
 SplitView<br />
