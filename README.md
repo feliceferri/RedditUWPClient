@@ -1,7 +1,7 @@
 This project was created as part of a recruitment process.
 <br />
 <br />
-It demostrate different concepts in UWP like:
+It demostrates different concepts in UWP like:
 <br />
 <br />
 MVVM - Bidings (Both x:Bind & Databind)<br />
